@@ -27,6 +27,7 @@ import ConnectionHealthPolicy from './connectionhealthpolicy/ConnectionHealthPol
 import ConnectionHealthPolicyConfiguration from './connectionhealthpolicy/ConnectionHealthPolicyConfiguration';
 import ConnectionMonitor from './connectionmonitor/ConnectionMonitor';
 import ConsoleLogger from './logger/ConsoleLogger';
+import ContentShareConstants from './contentsharecontroller/ContentShareConstants';
 import ContentShareController from './contentsharecontroller/ContentShareController';
 import CreatePeerConnectionTask from './task/CreatePeerConnectionTask';
 import CreateSDPTask from './task/CreateSDPTask';
@@ -305,6 +306,7 @@ export {
   ConnectionHealthPolicyConfiguration,
   ConnectionMonitor,
   ConsoleLogger,
+  ContentShareConstants,
   ContentShareController,
   CreatePeerConnectionTask,
   CreateSDPTask,

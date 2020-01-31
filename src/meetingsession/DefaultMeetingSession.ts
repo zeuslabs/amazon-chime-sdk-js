@@ -17,7 +17,6 @@ import ScreenShareViewFacade from '../screenshareviewfacade/ScreenShareViewFacad
 import DefaultWebSocketAdapter from '../websocketadapter/DefaultWebSocketAdapter';
 import MeetingSession from './MeetingSession';
 import MeetingSessionConfiguration from './MeetingSessionConfiguration';
-import ConsoleLogger from '../logger/ConsoleLogger';
 import ContentShareController from '../contentsharecontroller/ContentShareController';
 import DefaultContentShareController from '../contentsharecontroller/DefaultContentShareController';
 

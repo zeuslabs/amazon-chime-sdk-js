@@ -6,7 +6,6 @@
 build
 coverage
 demos/browser/logs/
-demos/browser/package-lock.json
 dist
 doc
 integration-test-results/
