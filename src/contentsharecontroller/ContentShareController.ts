@@ -1,0 +1,8 @@
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+export default interface ContentShareController {
+  start(stream: MediaStream): Promise<void>;
+
+  stop(): void;
+}

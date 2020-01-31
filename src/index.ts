@@ -27,6 +27,7 @@ import ConnectionHealthPolicy from './connectionhealthpolicy/ConnectionHealthPol
 import ConnectionHealthPolicyConfiguration from './connectionhealthpolicy/ConnectionHealthPolicyConfiguration';
 import ConnectionMonitor from './connectionmonitor/ConnectionMonitor';
 import ConsoleLogger from './logger/ConsoleLogger';
+import ContentShareController from './contentsharecontroller/ContentShareController';
 import CreatePeerConnectionTask from './task/CreatePeerConnectionTask';
 import CreateSDPTask from './task/CreateSDPTask';
 import DOMWebSocket from './domwebsocket/DOMWebSocket';
@@ -38,6 +39,7 @@ import DefaultAudioVideoController from './audiovideocontroller/DefaultAudioVide
 import DefaultAudioVideoFacade from './audiovideofacade/DefaultAudioVideoFacade';
 import DefaultBrowserBehavior from './browserbehavior/DefaultBrowserBehavior';
 import DefaultClientMetricReport from './clientmetricreport/DefaultClientMetricReport';
+import DefaultContentShareController from './contentsharecontroller/DefaultContentShareController';
 import DefaultDOMWebSocket from './domwebsocket/DefaultDOMWebSocket';
 import DefaultDOMWebSocketFactory from './domwebsocket/DefaultDOMWebSocketFactory';
 import DefaultDeviceController from './devicecontroller/DefaultDeviceController';
@@ -303,6 +305,7 @@ export {
   ConnectionHealthPolicyConfiguration,
   ConnectionMonitor,
   ConsoleLogger,
+  ContentShareController,
   CreatePeerConnectionTask,
   CreateSDPTask,
   DOMWebSocket,
@@ -314,6 +317,7 @@ export {
   DefaultAudioVideoFacade,
   DefaultBrowserBehavior,
   DefaultClientMetricReport,
+  DefaultContentShareController,
   DefaultDOMWebSocket,
   DefaultDOMWebSocketFactory,
   DefaultDeviceController,

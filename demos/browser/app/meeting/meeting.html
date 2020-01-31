@@ -196,6 +196,7 @@
     <!-- In-meeting screen -->
 
     <div id="flow-meeting" class="flow" style="position:absolute;left:15px;top:0;bottom:55px;right:15px">
+      <video id="content-share-video" crossOrigin="anonymous" style="position:fixed;left:0px;bottom:0px;display:none" src="https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.360p.vp9.webm"></video>
       <div class="text-muted" style="position:fixed;left:3px;bottom:3px" id="video-uplink-bandwidth"></div>
       <div class="text-muted" style="position:fixed;right:3px;bottom:3px" id="video-downlink-bandwidth"></div>
       <audio id="meeting-audio" style="display:none"></audio>
@@ -232,6 +233,8 @@
             </button>
             <button id="button-pause-screen-share" type="button" class="btn btn-outline-secondary m-2" title="Pause/Unpause screen share">
               ${require('../../node_modules/open-iconic/svg/media-pause.svg').default}
+            <button id="button-content-share" type="button" class="btn btn-outline-secondary m-2" title="Toggle content share">
+              ${require('../../node_modules/open-iconic/svg/camera-slr.svg').default}
             </button>
           </div>
           <div class="col-4 text-left">

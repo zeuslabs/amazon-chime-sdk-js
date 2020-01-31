@@ -17,11 +17,15 @@ import ScreenShareViewFacade from '../screenshareviewfacade/ScreenShareViewFacad
 import DefaultWebSocketAdapter from '../websocketadapter/DefaultWebSocketAdapter';
 import MeetingSession from './MeetingSession';
 import MeetingSessionConfiguration from './MeetingSessionConfiguration';
+import ConsoleLogger from '../logger/ConsoleLogger';
+import ContentShareController from '../contentsharecontroller/ContentShareController';
+import DefaultContentShareController from '../contentsharecontroller/DefaultContentShareController';
 
 export default class DefaultMeetingSession implements MeetingSession {
   private _configuration: MeetingSessionConfiguration;
   private _logger: Logger;
   private audioVideoController: AudioVideoController;
+  private contentShareController: ContentShareController;
   private _deviceController: DeviceController;
   private screenShareFacade: ScreenShareFacade;
   private screenShareViewFacade: ScreenShareViewFacade;
@@ -64,6 +68,10 @@ export default class DefaultMeetingSession implements MeetingSession {
       this._configuration,
       this._logger
     );
+    this.contentShareController = new DefaultContentShareController(
+      this._logger,
+      this._configuration,
+    )
     this.checkBrowserSupport();
   }
 
@@ -77,6 +85,10 @@ export default class DefaultMeetingSession implements MeetingSession {
 
   get audioVideo(): AudioVideoFacade {
     return this.audioVideoController.facade;
+  }
+
+  get contentShare(): ContentShareController {
+    return this.contentShareController;
   }
 
   get screenShare(): ScreenShareFacade {
