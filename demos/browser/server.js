@@ -22,7 +22,8 @@ if (alternateEndpoint) {
   AWS.NodeHttpClient.sslAgent.options.rejectUnauthorized = false;
   chime.endpoint = new AWS.Endpoint(alternateEndpoint);
 } else {
-  chime.endpoint = new AWS.Endpoint('https://service.chime.aws.amazon.com/console');
+  // chime.endpoint = new AWS.Endpoint('https://service.chime.aws.amazon.com/console');
+  throw new Error('this branch requires specifying ENDPOINT');
 }
 
 const meetingCache = {};
