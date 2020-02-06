@@ -6,6 +6,8 @@ import DefaultAudioVideoController from '../audiovideocontroller/DefaultAudioVid
 import AudioVideoFacade from '../audiovideofacade/AudioVideoFacade';
 import FullJitterBackoff from '../backoff/FullJitterBackoff';
 import DefaultBrowserBehavior from '../browserbehavior/DefaultBrowserBehavior';
+import ContentShareController from '../contentsharecontroller/ContentShareController';
+import DefaultContentShareController from '../contentsharecontroller/DefaultContentShareController';
 import DeviceController from '../devicecontroller/DeviceController';
 import Logger from '../logger/Logger';
 import DeviceControllerBasedMediaStreamBroker from '../mediastreambroker/DeviceControllerBasedMediaStreamBroker';
@@ -17,8 +19,6 @@ import ScreenShareViewFacade from '../screenshareviewfacade/ScreenShareViewFacad
 import DefaultWebSocketAdapter from '../websocketadapter/DefaultWebSocketAdapter';
 import MeetingSession from './MeetingSession';
 import MeetingSessionConfiguration from './MeetingSessionConfiguration';
-import ContentShareController from '../contentsharecontroller/ContentShareController';
-import DefaultContentShareController from '../contentsharecontroller/DefaultContentShareController';
 
 export default class DefaultMeetingSession implements MeetingSession {
   private _configuration: MeetingSessionConfiguration;
@@ -69,8 +69,8 @@ export default class DefaultMeetingSession implements MeetingSession {
     );
     this.contentShareController = new DefaultContentShareController(
       this._logger,
-      this._configuration,
-    )
+      this._configuration
+    );
     this.checkBrowserSupport();
   }
 

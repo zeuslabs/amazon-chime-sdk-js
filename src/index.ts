@@ -134,6 +134,7 @@ import MeetingSessionStatusCode from './meetingsession/MeetingSessionStatusCode'
 import MeetingSessionTURNCredentials from './meetingsession/MeetingSessionTURNCredentials';
 import MeetingSessionURLs from './meetingsession/MeetingSessionURLs';
 import MeetingSessionVideoAvailability from './meetingsession/MeetingSessionVideoAvailability';
+import Modality from './modality/Modality';
 import MonitorTask from './task/MonitorTask';
 import NScaleVideoUplinkBandwidthPolicy from './videouplinkbandwidthpolicy/NScaleVideoUplinkBandwidthPolicy';
 import NoOpAudioVideoController from './audiovideocontroller/NoOpAudioVideoController';
@@ -413,6 +414,7 @@ export {
   MeetingSessionTURNCredentials,
   MeetingSessionURLs,
   MeetingSessionVideoAvailability,
+  Modality,
   MonitorTask,
   NScaleVideoUplinkBandwidthPolicy,
   NoOpAudioVideoController,

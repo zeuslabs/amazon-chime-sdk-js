@@ -1,23 +1,24 @@
 // Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import ContentShareController from './ContentShareController';
-import Logger from '../logger/Logger';
-import MeetingSessionCredentials from '../meetingsession/MeetingSessionCredentials';
-import MeetingSessionConfiguration from '../meetingsession/MeetingSessionConfiguration';
 import AudioVideoController from '../audiovideocontroller/AudioVideoController';
-import DefaultWebSocketAdapter from '../websocketadapter/DefaultWebSocketAdapter';
-import DefaultReconnectController from '../reconnectcontroller/DefaultReconnectController';
-import FullJitterBackoff from '../backoff/FullJitterBackoff';
 import DefaultAudioVideoController from '../audiovideocontroller/DefaultAudioVideoController';
-import DeviceControllerBasedMediaStreamBroker from '../mediastreambroker/DeviceControllerBasedMediaStreamBroker';
-import Device from '../devicecontroller/Device';
-import DevicePermission from '../devicecontroller/DevicePermission';
+import FullJitterBackoff from '../backoff/FullJitterBackoff';
 import DeviceChangeObserver from '../devicechangeobserver/DeviceChangeObserver';
 import DefaultDeviceController from '../devicecontroller/DefaultDeviceController';
+import Device from '../devicecontroller/Device';
+import DevicePermission from '../devicecontroller/DevicePermission';
+import Logger from '../logger/Logger';
+import DeviceControllerBasedMediaStreamBroker from '../mediastreambroker/DeviceControllerBasedMediaStreamBroker';
+import MeetingSessionConfiguration from '../meetingsession/MeetingSessionConfiguration';
+import MeetingSessionCredentials from '../meetingsession/MeetingSessionCredentials';
+import DefaultReconnectController from '../reconnectcontroller/DefaultReconnectController';
+import DefaultWebSocketAdapter from '../websocketadapter/DefaultWebSocketAdapter';
 import ContentShareConstants from './ContentShareConstants';
+import ContentShareController from './ContentShareController';
 
-export default class DefaultContentShareController implements ContentShareController, DeviceControllerBasedMediaStreamBroker {
+export default class DefaultContentShareController
+  implements ContentShareController, DeviceControllerBasedMediaStreamBroker {
   private static RECONNECT_TIMEOUT_MS = 120 * 1000;
   private static RECONNECT_FIXED_WAIT_MS = 0;
   private static RECONNECT_SHORT_BACKOFF_MS = 1 * 1000;
@@ -32,8 +33,10 @@ export default class DefaultContentShareController implements ContentShareContro
     this.configuration.meetingId = configuration.meetingId;
     this.configuration.urls = configuration.urls;
     this.configuration.credentials = new MeetingSessionCredentials();
-    this.configuration.credentials.attendeeId = configuration.credentials.attendeeId + ContentShareConstants.Modality;
-    this.configuration.credentials.joinToken = configuration.credentials.joinToken + ContentShareConstants.Modality;
+    this.configuration.credentials.attendeeId =
+      configuration.credentials.attendeeId + ContentShareConstants.Modality;
+    this.configuration.credentials.joinToken =
+      configuration.credentials.joinToken + ContentShareConstants.Modality;
     this.audioVideo = new DefaultAudioVideoController(
       this.configuration,
       this.logger,

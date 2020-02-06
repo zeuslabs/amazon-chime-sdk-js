@@ -38,7 +38,8 @@ export default class ReceiveTURNCredentialsTask extends BaseTask {
       credentials: 'omit',
       headers: {
         'Content-Type': 'application/json',
-        'X-Chime-Auth-Token': '_aws_wt_session=' + this.joinToken.replace(ContentShareConstants.Modality, ''),
+        'X-Chime-Auth-Token':
+          '_aws_wt_session=' + this.joinToken.replace(ContentShareConstants.Modality, ''),
       },
       redirect: 'follow',
       referrer: 'no-referrer',
