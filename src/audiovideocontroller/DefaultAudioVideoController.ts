@@ -265,7 +265,7 @@ export default class DefaultAudioVideoController implements AudioVideoController
     }
 
     try {
-      await new SerialGroupTask(this.logger, 'AudioVideoStart', [
+      await new SerialGroupTask(this.logger, this.wrapTaskName('AudioVideoStart'), [
         new MonitorTask(
           this.meetingSessionContext,
           this.configuration.connectionHealthPolicyConfiguration,
@@ -328,6 +328,10 @@ export default class DefaultAudioVideoController implements AudioVideoController
     this._reconnectController.reset();
   }
 
+  private wrapTaskName(taskName: string): string {
+    return `${taskName}/${this.configuration.meetingId}/${this.configuration.credentials.attendeeId}`;
+  }
+
   stop(): void {
     this.sessionStateController.perform(SessionStateControllerAction.Disconnect, () => {
       this.actionDisconnect(new MeetingSessionStatus(MeetingSessionStatusCode.OK), false);
@@ -339,7 +343,7 @@ export default class DefaultAudioVideoController implements AudioVideoController
     reconnecting: boolean
   ): Promise<void> {
     try {
-      await new SerialGroupTask(this.logger, 'AudioVideoStop', [
+      await new SerialGroupTask(this.logger, this.wrapTaskName('AudioVideoStop'), [
         new TimeoutTask(
           this.logger,
           new LeaveAndReceiveLeaveAckTask(this.meetingSessionContext),
@@ -351,7 +355,7 @@ export default class DefaultAudioVideoController implements AudioVideoController
     }
 
     try {
-      await new SerialGroupTask(this.logger, 'AudioVideoClean', [
+      await new SerialGroupTask(this.logger, this.wrapTaskName('AudioVideoClean'), [
         new TimeoutTask(
           this.logger,
           new CleanStoppedSessionTask(this.meetingSessionContext),
@@ -445,7 +449,7 @@ export default class DefaultAudioVideoController implements AudioVideoController
   private async actionUpdate(notify: boolean): Promise<void> {
     // TODO: do not block other updates while waiting for video input
     try {
-      await new SerialGroupTask(this.logger, 'AudioVideoUpdate', [
+      await new SerialGroupTask(this.logger, this.wrapTaskName('AudioVideoUpdate'), [
         new ReceiveVideoInputTask(this.meetingSessionContext),
         new TimeoutTask(
           this.logger,
@@ -521,7 +525,7 @@ export default class DefaultAudioVideoController implements AudioVideoController
 
     this.connectionHealthData.reset();
     try {
-      await new SerialGroupTask(this.logger, 'AudioVideoReconnect', [
+      await new SerialGroupTask(this.logger, this.wrapTaskName('AudioVideoReconnect'), [
         new TimeoutTask(
           this.logger,
           new SerialGroupTask(this.logger, 'Media', [
