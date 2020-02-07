@@ -4,6 +4,7 @@
 import AudioVideoController from '../audiovideocontroller/AudioVideoController';
 import DefaultAudioVideoController from '../audiovideocontroller/DefaultAudioVideoController';
 import AudioVideoFacade from '../audiovideofacade/AudioVideoFacade';
+import DefaultAudioVideoFacade from '../audiovideofacade/DefaultAudioVideoFacade';
 import FullJitterBackoff from '../backoff/FullJitterBackoff';
 import DefaultBrowserBehavior from '../browserbehavior/DefaultBrowserBehavior';
 import ContentShareController from '../contentsharecontroller/ContentShareController';
@@ -28,6 +29,7 @@ export default class DefaultMeetingSession implements MeetingSession {
   private _deviceController: DeviceController;
   private screenShareFacade: ScreenShareFacade;
   private screenShareViewFacade: ScreenShareViewFacade;
+  private audioVideoFacade: AudioVideoFacade;
 
   private static RECONNECT_TIMEOUT_MS = 120 * 1000;
   private static RECONNECT_FIXED_WAIT_MS = 0;
@@ -71,6 +73,14 @@ export default class DefaultMeetingSession implements MeetingSession {
       this._logger,
       this._configuration
     );
+    this.audioVideoFacade = new DefaultAudioVideoFacade(
+      this.audioVideoController,
+      this.audioVideoController.videoTileController,
+      this.audioVideoController.realtimeController,
+      this.audioVideoController.audioMixController,
+      this.audioVideoController.deviceController,
+      this.contentShareController,
+    );
     this.checkBrowserSupport();
   }
 
@@ -83,7 +93,7 @@ export default class DefaultMeetingSession implements MeetingSession {
   }
 
   get audioVideo(): AudioVideoFacade {
-    return this.audioVideoController.facade;
+    return this.audioVideoFacade;
   }
 
   get contentShare(): ContentShareController {

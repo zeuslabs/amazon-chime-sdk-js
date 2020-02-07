@@ -6,8 +6,6 @@ import DefaultActiveSpeakerDetector from '../activespeakerdetector/DefaultActive
 import AudioMixController from '../audiomixcontroller/AudioMixController';
 import DefaultAudioMixController from '../audiomixcontroller/DefaultAudioMixController';
 import AudioVideoController from '../audiovideocontroller/AudioVideoController';
-import AudioVideoFacade from '../audiovideofacade/AudioVideoFacade';
-import DefaultAudioVideoFacade from '../audiovideofacade/DefaultAudioVideoFacade';
 import AudioVideoObserver from '../audiovideoobserver/AudioVideoObserver';
 import DefaultBrowserBehavior from '../browserbehavior/DefaultBrowserBehavior';
 import ConnectionHealthData from '../connectionhealthpolicy/ConnectionHealthData';
@@ -69,7 +67,6 @@ import WebSocketAdapter from '../websocketadapter/WebSocketAdapter';
 import AudioVideoControllerState from './AudioVideoControllerState';
 
 export default class DefaultAudioVideoController implements AudioVideoController {
-  private _facade: AudioVideoFacade;
   private _logger: Logger;
   private _configuration: MeetingSessionConfiguration;
   private _webSocketAdapter: WebSocketAdapter;
@@ -94,7 +91,7 @@ export default class DefaultAudioVideoController implements AudioVideoController
     logger: Logger,
     webSocketAdapter: WebSocketAdapter,
     deviceController: DeviceControllerBasedMediaStreamBroker,
-    reconnectController: ReconnectController
+    reconnectController: ReconnectController,
   ) {
     this._logger = logger;
     this.sessionStateController = new DefaultSessionStateController(this._logger);
@@ -115,13 +112,6 @@ export default class DefaultAudioVideoController implements AudioVideoController
       this._logger
     );
     this._audioMixController = new DefaultAudioMixController();
-    this._facade = new DefaultAudioVideoFacade(
-      this,
-      this._videoTileController,
-      this._realtimeController,
-      this._audioMixController,
-      this._deviceController
-    );
     this.meetingSessionContext.logger = this._logger;
   }
 
@@ -143,10 +133,6 @@ export default class DefaultAudioVideoController implements AudioVideoController
 
   get audioMixController(): AudioMixController {
     return this._audioMixController;
-  }
-
-  get facade(): AudioVideoFacade {
-    return this._facade;
   }
 
   get logger(): Logger {

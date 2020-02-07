@@ -4,7 +4,6 @@
 import ActiveSpeakerDetector from '../activespeakerdetector/ActiveSpeakerDetector';
 import AudioMixController from '../audiomixcontroller/AudioMixController';
 import AudioVideoControllerFacade from '../audiovideocontroller/AudioVideoControllerFacade';
-import AudioVideoFacade from '../audiovideofacade/AudioVideoFacade';
 import AudioVideoObserver from '../audiovideoobserver/AudioVideoObserver';
 import DeviceController from '../devicecontroller/DeviceController';
 import Logger from '../logger/Logger';
@@ -75,11 +74,6 @@ export default interface AudioVideoController extends AudioVideoControllerFacade
    * Returns the [[VideoTileController]] for this audio-video controller.
    */
   readonly videoTileController: VideoTileController;
-
-  /**
-   * Returns the [[AudioVideoFacade]] for this audio-video controller.
-   */
-  readonly facade: AudioVideoFacade;
 
   /**
    * Returns the [[Logger]] for this audio-video controller.

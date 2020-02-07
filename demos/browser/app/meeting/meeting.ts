@@ -10,7 +10,6 @@ import {
   AudioVideoObserver,
   ClientMetricReport,
   ConsoleLogger,
-  ContentShareConstants,
   DefaultActiveSpeakerPolicy,
   DefaultAudioMixController,
   DefaultDeviceController,
@@ -23,6 +22,7 @@ import {
   MeetingSessionStatus,
   MeetingSessionStatusCode,
   MeetingSessionVideoAvailability,
+  Modality,
   ScreenMessageDetail,
   TimeoutScheduler,
   VideoTileState,
@@ -343,9 +343,9 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     buttonScreenShare.addEventListener('click', _e => {
       new AsyncScheduler().start(async () => {
         if (this.toggleButton('button-screen-share')) {
-          this.meetingSession.contentShare.startContentShareFromScreenCapture();
+          this.audioVideo.startContentShareFromScreenCapture();
         } else {
-          this.meetingSession.contentShare.stopContentShare();
+          this.audioVideo.stopContentShare();
         }
       });
     });
@@ -359,9 +359,9 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
           video.play();
           // @ts-ignore
           const mediaStream: MediaStream = video.captureStream();
-          this.meetingSession.contentShare.startContentShare(mediaStream);
+          this.audioVideo.startContentShare(mediaStream);
         } else {
-          this.meetingSession.contentShare.stopContentShare();
+          this.audioVideo.stopContentShare();
           video.load();
           video.style.display = 'none';
         }
@@ -646,7 +646,7 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
             this.roster[attendeeId].signalStrength = Math.round(signalStrength * 100);
           }
           if (!this.roster[attendeeId].name) {
-            const baseAttendeeId = attendeeId.replace(ContentShareConstants.Modality, '');
+            const baseAttendeeId = new Modality(attendeeId).base();
             const response = await fetch(`${DemoMeetingApp.BASE_URL}attendee?title=${encodeURIComponent(this.meeting)}&attendee=${encodeURIComponent(baseAttendeeId)}`);
             const json = await response.json();
             let name = json.AttendeeInfo.Name;
@@ -1036,11 +1036,12 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
 
   videoTileDidUpdate(tileState: VideoTileState): void {
     this.log(`video tile updated: ${JSON.stringify(tileState, null, '  ')}`);
-    const selfAttendeeId = this.meetingSession.configuration.credentials.attendeeId;
     if (!tileState.boundAttendeeId) {
       return;
     }
-    if (tileState.boundAttendeeId === selfAttendeeId + ContentShareConstants.Modality) {
+    const selfAttendeeId = this.meetingSession.configuration.credentials.attendeeId;
+    const modality = new Modality(tileState.boundAttendeeId);
+    if (modality.base() === selfAttendeeId && modality.hasModality(Modality.MODALITY_CONTENT)) {
       // don't bind one's own content
       return;
     }
