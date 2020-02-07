@@ -340,17 +340,12 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     });
 
     const buttonScreenShare = document.getElementById('button-screen-share');
-    let screenShareMediaStream: MediaStream | null;
     buttonScreenShare.addEventListener('click', _e => {
       new AsyncScheduler().start(async () => {
         if (this.toggleButton('button-screen-share')) {
-          // @ts-ignore
-          screenShareMediaStream = await navigator.mediaDevices.getDisplayMedia();
-          this.meetingSession.contentShare.start(screenShareMediaStream);
+          this.meetingSession.contentShare.startContentShareFromScreenCapture();
         } else {
-          this.meetingSession.contentShare.stop();
-          screenShareMediaStream.getTracks()[0].stop();
-          screenShareMediaStream = null;
+          this.meetingSession.contentShare.stopContentShare();
         }
       });
     });
@@ -364,9 +359,9 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
           video.play();
           // @ts-ignore
           const mediaStream: MediaStream = video.captureStream();
-          this.meetingSession.contentShare.start(mediaStream);
+          this.meetingSession.contentShare.startContentShare(mediaStream);
         } else {
-          this.meetingSession.contentShare.stop();
+          this.meetingSession.contentShare.stopContentShare();
           video.load();
           video.style.display = 'none';
         }

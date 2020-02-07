@@ -53,7 +53,7 @@ export default class DefaultContentShareController
     );
   }
 
-  async start(stream: MediaStream): Promise<void> {
+  async startContentShare(stream: MediaStream): Promise<void> {
     this.mediaStream = stream;
     this.audioVideo.start();
     if (this.mediaStream.getVideoTracks().length > 0) {
@@ -61,8 +61,37 @@ export default class DefaultContentShareController
     }
   }
 
-  stop(): void {
+  async startContentShareFromScreenCapture(sourceId?: string): Promise<void> {
+    this.mediaStream = await this.acquireDisplayInputStream(
+      this.screenCaptureDisplayMediaConstraints(sourceId)
+    );
+    this.startContentShare(this.mediaStream);
+  }
+
+  stopContentShare(): void {
     this.audioVideo.stop();
+    this.mediaStream.getTracks()[0].stop();
+    this.mediaStream = null;
+  }
+
+  private screenCaptureDisplayMediaConstraints(sourceId?: string): MediaStreamConstraints {
+    return {
+      audio: false,
+      video: {
+        ...(!sourceId && {
+          frameRate: {
+            max: 3,
+          },
+        }),
+        ...(sourceId && {
+          mandatory: {
+            chromeMediaSource: 'desktop',
+            chromeMediaSourceId: sourceId,
+            maxFrameRate: 3,
+          },
+        }),
+      },
+    };
   }
 
   async acquireAudioInputStream(): Promise<MediaStream> {
@@ -82,7 +111,20 @@ export default class DefaultContentShareController
   }
 
   async acquireDisplayInputStream(streamConstraints: MediaStreamConstraints): Promise<MediaStream> {
-    throw new Error('unsupported');
+    if (
+      streamConstraints &&
+      streamConstraints.video &&
+      // @ts-ignore
+      streamConstraints.video.mandatory &&
+      // @ts-ignore
+      streamConstraints.video.mandatory.chromeMediaSource &&
+      // @ts-ignore
+      streamConstraints.video.mandatory.chromeMediaSourceId
+    ) {
+      return navigator.mediaDevices.getUserMedia(streamConstraints);
+    }
+    // @ts-ignore https://github.com/microsoft/TypeScript/issues/31821
+    return navigator.mediaDevices.getDisplayMedia(streamConstraints);
   }
 
   bindToAudioVideoController(audioVideoController: AudioVideoController): void {
