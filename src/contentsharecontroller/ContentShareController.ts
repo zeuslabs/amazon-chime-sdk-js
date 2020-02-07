@@ -6,5 +6,9 @@ export default interface ContentShareController {
 
   startContentShareFromScreenCapture(sourceId?: string): Promise<void>;
 
+  pauseContentShare(): void;
+
+  unpauseContentShare(): void;
+
   stopContentShare(): void;
 }

@@ -370,6 +370,16 @@ export default class DefaultAudioVideoFacade implements AudioVideoFacade {
     return result;
   }
 
+  pauseContentShare(): void {
+    this.contentShareController.pauseContentShare();
+    this.trace('pauseContentShare');
+  }
+
+  unpauseContentShare(): void {
+    this.contentShareController.unpauseContentShare();
+    this.trace('unpauseContentShare');
+  }
+
   stopContentShare(): void {
     this.contentShareController.stopContentShare();
     this.trace('stopContentShare');

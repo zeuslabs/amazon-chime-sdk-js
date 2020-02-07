@@ -122,7 +122,6 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     'button-speaker': true,
     'button-screen-share': false,
     'button-content-share': false,
-    'button-screen-view': false,
     'button-pause-screen-share': false,
   };
 
@@ -342,10 +341,29 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     const buttonScreenShare = document.getElementById('button-screen-share');
     buttonScreenShare.addEventListener('click', _e => {
       new AsyncScheduler().start(async () => {
-        if (this.toggleButton('button-screen-share')) {
+        if (!this.isButtonOn('button-screen-share')) {
+          this.toggleButton('button-screen-share');
           this.audioVideo.startContentShareFromScreenCapture();
         } else {
+          if (this.isButtonOn('button-pause-screen-share')) {
+            this.toggleButton('button-pause-screen-share');
+          }
+          this.toggleButton('button-screen-share');
           this.audioVideo.stopContentShare();
+        }
+      });
+    });
+
+    const buttonPauseScreenShare = document.getElementById('button-pause-screen-share');
+    buttonPauseScreenShare.addEventListener('click', _e => {
+      if (!this.isButtonOn('button-screen-share')) {
+        return;
+      }
+      new AsyncScheduler().start(async () => {
+        if (this.toggleButton('button-pause-screen-share')) {
+          this.audioVideo.pauseContentShare();
+        } else {
+          this.audioVideo.unpauseContentShare();
         }
       });
     });
@@ -378,24 +396,6 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
         } else {
           this.audioVideo.unbindAudioElement();
         }
-      });
-    });
-
-    const buttonScreenView = document.getElementById('button-screen-view');
-    buttonScreenView.addEventListener('click', _e => {
-      new AsyncScheduler().start(async () => {
-        if (this.toggleButton('button-screen-view')) {
-          const screenViewDiv = document.getElementById('tile-17') as HTMLDivElement;
-          screenViewDiv.style.display = 'block';
-          this.meetingSession.screenShareView.start(screenViewDiv);
-        } else {
-          this.meetingSession.screenShareView.stop()
-            .catch(error => {
-              this.log(error);
-            })
-            .finally(() => this.hideTile(17));
-        }
-        this.layoutVideoTiles();
       });
     });
 
@@ -437,6 +437,10 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       this.buttonStates[button] = !this.buttonStates[button];
     }
     this.displayButtonStates();
+    return this.buttonStates[button];
+  }
+
+  isButtonOn(button: string) {
     return this.buttonStates[button];
   }
 
