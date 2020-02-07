@@ -23,7 +23,6 @@ import {
   MeetingSessionStatusCode,
   MeetingSessionVideoAvailability,
   Modality,
-  ScreenMessageDetail,
   TimeoutScheduler,
   VideoTileState,
 } from '../../../../src/index';
@@ -120,9 +119,9 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     'button-microphone': true,
     'button-camera': false,
     'button-speaker': true,
-    'button-screen-share': false,
+    'button-screen-capture': false,
     'button-content-share': false,
-    'button-pause-screen-share': false,
+    'button-pause-content-share': false,
   };
 
   // feature flags
@@ -338,29 +337,26 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       });
     });
 
-    const buttonScreenShare = document.getElementById('button-screen-share');
-    buttonScreenShare.addEventListener('click', _e => {
+    const buttonScreenCapture = document.getElementById('button-screen-capture');
+    buttonScreenCapture.addEventListener('click', _e => {
       new AsyncScheduler().start(async () => {
-        if (!this.isButtonOn('button-screen-share')) {
-          this.toggleButton('button-screen-share');
+        if (!this.isButtonOn('button-screen-capture')) {
+          this.toggleButton('button-screen-capture');
           this.audioVideo.startContentShareFromScreenCapture();
         } else {
-          if (this.isButtonOn('button-pause-screen-share')) {
-            this.toggleButton('button-pause-screen-share');
+          if (this.isButtonOn('button-pause-content-share')) {
+            this.toggleButton('button-pause-content-share');
           }
-          this.toggleButton('button-screen-share');
+          this.toggleButton('button-screen-capture');
           this.audioVideo.stopContentShare();
         }
       });
     });
 
-    const buttonPauseScreenShare = document.getElementById('button-pause-screen-share');
-    buttonPauseScreenShare.addEventListener('click', _e => {
-      if (!this.isButtonOn('button-screen-share')) {
-        return;
-      }
+    const buttonPauseContentShare = document.getElementById('button-pause-content-share');
+    buttonPauseContentShare.addEventListener('click', _e => {
       new AsyncScheduler().start(async () => {
-        if (this.toggleButton('button-pause-screen-share')) {
+        if (this.toggleButton('button-pause-content-share')) {
           this.audioVideo.pauseContentShare();
         } else {
           this.audioVideo.unpauseContentShare();
@@ -531,7 +527,6 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     this.setupMuteHandler();
     this.setupCanUnmuteHandler();
     this.setupSubscribeToAttendeeIdPresenceHandler();
-    this.setupScreenViewing();
     this.audioVideo.addObserver(this);
   }
 
@@ -548,18 +543,9 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     await this.openAudioInputFromSelection();
     await this.openAudioOutputFromSelection();
     this.audioVideo.start();
-    // await this.meetingSession.screenShare.open();
-    // await this.meetingSession.screenShareView.open();
   }
 
   leave(): void {
-    this.meetingSession.screenShare
-      .stop()
-      .catch(() => {})
-      .finally(() => {
-        return this.meetingSession.screenShare.close();
-      });
-    this.meetingSession.screenShareView.close();
     this.audioVideo.stop();
     this.roster = {};
   }
@@ -1133,20 +1119,11 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
 
   visibleTileIndices(): number[] {
     let tiles: number[] = [];
-    const screenViewTileIndex = 17;
-    for (let tileIndex = 0; tileIndex <= screenViewTileIndex; tileIndex++) {
+    const localTileIndex = 16;
+    for (let tileIndex = 0; tileIndex <= localTileIndex; tileIndex++) {
       const tileElement = document.getElementById(`tile-${tileIndex}`) as HTMLDivElement;
       if (tileElement.style.display === 'block') {
-        if (tileIndex === screenViewTileIndex) {
-          // Hide videos when viewing screen
-          for (const tile of tiles) {
-            const tileToSuppress = document.getElementById(`tile-${tile}`) as HTMLDivElement;
-            tileToSuppress.style.visibility = 'hidden';
-          }
-          tiles = [screenViewTileIndex];
-        } else {
-          tiles.push(tileIndex);
-        }
+        tiles.push(tileIndex);
       }
     }
     return tiles;
@@ -1265,19 +1242,6 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       const y = Math.floor(i / columns) * h; // + (height / 2 - totalHeight / 2);
       this.updateTilePlacement(visibleTileIndices[i], x, y, w, h);
     }
-  }
-
-  private setupScreenViewing(): void {
-    const self = this;
-    this.meetingSession.screenShareView.registerObserver({
-      streamDidStart(screenMessageDetail: ScreenMessageDetail): void {
-        const rosterEntry = self.roster[screenMessageDetail.attendeeId];
-        document.getElementById('nameplate-17').innerHTML = rosterEntry ? rosterEntry.name : '';
-      },
-      streamDidStop(_screenMessageDetail: ScreenMessageDetail): void {
-        document.getElementById('nameplate-17').innerHTML = 'No one is sharing screen';
-      },
-    });
   }
 
   connectionDidBecomePoor(): void {
