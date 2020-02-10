@@ -359,33 +359,11 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
 
     const buttonContentShare = document.getElementById('button-content-share');
     buttonContentShare.addEventListener('click', _e => {
-      new AsyncScheduler().start(async () => {
+      new AsyncScheduler().start(() => {
         if (!this.isButtonOn('button-content-share')) {
-          this.toggleButton('button-content-share');
-          switch (this.contentShareType) {
-            case ContentShareType.ScreenCapture:
-              this.audioVideo.startContentShareFromScreenCapture();
-              break;
-            case ContentShareType.Example:
-              const exampleVideo = document.getElementById('content-share-video') as HTMLVideoElement;
-              exampleVideo.style.display = 'block';
-              exampleVideo.play();
-              // @ts-ignore
-              const mediaStream: MediaStream = exampleVideo.captureStream();
-              this.audioVideo.startContentShare(mediaStream);
-              break;
-          }
+          this.contentShareStart();
         } else {
-          if (this.isButtonOn('button-pause-content-share')) {
-            this.toggleButton('button-pause-content-share');
-          }
-          this.toggleButton('button-content-share');
-          this.audioVideo.stopContentShare();
-          if (this.contentShareType === ContentShareType.Example) {
-            const exampleVideo = document.getElementById('content-share-video') as HTMLVideoElement;
-            exampleVideo.load();
-            exampleVideo.style.display = 'none';
-          }
+          this.contentShareStop();
         }
       });
     });
@@ -1005,13 +983,51 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
   private initContentShareDropDownItems(): void {
     let item = document.getElementById('dropdown-item-content-share-screen-capture');
     item.addEventListener('click', () => {
-      this.contentShareType = ContentShareType.ScreenCapture;
+      this.contentShareTypeChanged(ContentShareType.ScreenCapture);
     });
 
     item = document.getElementById('dropdown-item-content-share-screen-example');
     item.addEventListener('click', () => {
-      this.contentShareType = ContentShareType.Example;
+      this.contentShareTypeChanged(ContentShareType.Example);
     });
+  }
+
+  private async contentShareTypeChanged(contentShareType: ContentShareType): Promise<void> {
+    if (this.isButtonOn('button-content-share')) {
+      await this.contentShareStop();
+    }
+    this.contentShareType = contentShareType;
+    this.contentShareStart();
+  }
+
+  private async contentShareStart(): Promise<void> {
+    this.toggleButton('button-content-share');
+    switch (this.contentShareType) {
+      case ContentShareType.ScreenCapture:
+        this.audioVideo.startContentShareFromScreenCapture();
+        break;
+      case ContentShareType.Example:
+        const exampleVideo = document.getElementById('content-share-video') as HTMLVideoElement;
+        exampleVideo.style.display = 'block';
+        exampleVideo.play();
+        // @ts-ignore
+        const mediaStream: MediaStream = exampleVideo.captureStream();
+        this.audioVideo.startContentShare(mediaStream);
+        break;
+    }
+  }
+
+  private async contentShareStop(): Promise<void> {
+    if (this.isButtonOn('button-pause-content-share')) {
+      this.toggleButton('button-pause-content-share');
+    }
+    this.toggleButton('button-content-share');
+    this.audioVideo.stopContentShare();
+    if (this.contentShareType === ContentShareType.Example) {
+      const exampleVideo = document.getElementById('content-share-video') as HTMLVideoElement;
+      exampleVideo.load();
+      exampleVideo.style.display = 'none';
+    }
   }
 
   async authenticate(): Promise<void> {
