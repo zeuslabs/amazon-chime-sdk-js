@@ -196,7 +196,7 @@
     <!-- In-meeting screen -->
 
     <div id="flow-meeting" class="flow" style="position:absolute;left:15px;top:0;bottom:55px;right:15px">
-      <video id="content-share-video" crossOrigin="anonymous" style="position:fixed;left:0px;bottom:0px;display:none" src="https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.360p.vp9.webm"></video>
+      <video id="content-share-video" crossOrigin="anonymous" style="position:fixed;left:0px;bottom:0px;width:320px;height:240px;display:none"></video>
       <div class="text-muted" style="position:fixed;left:3px;bottom:3px" id="video-uplink-bandwidth"></div>
       <div class="text-muted" style="position:fixed;right:3px;bottom:3px" id="video-downlink-bandwidth"></div>
       <audio id="meeting-audio" style="display:none"></audio>
@@ -235,8 +235,9 @@
               <div class="btn-group" role="group">
                 <button id="button-content-share-drop" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Select content to share"></button>
                 <div id="dropdown-menu-content-share" class="dropdown-menu" aria-labelledby="button-content-share-drop" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
-                  <a id="dropdown-item-content-share-screen-capture" class="dropdown-item" href="#">Screen capture</a>
-                  <a id="dropdown-item-content-share-screen-example" class="dropdown-item" href="#">Example</a>
+                  <a id="dropdown-item-content-share-screen-capture" class="dropdown-item" href="#">Screen Capture...</a>
+                  <a id="dropdown-item-content-share-screen-test-video" class="dropdown-item" href="#">Test Video</a>
+                  <a id="dropdown-item-content-share-file-item" class="dropdown-item" href="#"><input id="content-share-item" type="file"></a>
                 </div>
               </div>
             </div>

@@ -94,7 +94,7 @@ class TestSound {
 
 export enum ContentShareType {
   ScreenCapture,
-  Example,
+  VideoFile,
 };
 
 export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver {
@@ -107,7 +107,7 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
   region: string | null = null;
   static readonly DID: string = '+17035550122';
   static readonly BASE_URL: string = [location.protocol, '//', location.host, location.pathname.replace(/\/*$/, '/')].join('');
-
+  static testVideo: string = 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.360p.vp9.webm';
   meetingSession: MeetingSession | null = null;
   audioVideo: AudioVideoFacade | null = null;
   tileOrganizer: DemoTileOrganizer = new DemoTileOrganizer();
@@ -991,9 +991,28 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       this.contentShareTypeChanged(ContentShareType.ScreenCapture);
     });
 
-    item = document.getElementById('dropdown-item-content-share-screen-example');
+    item = document.getElementById('dropdown-item-content-share-screen-test-video');
     item.addEventListener('click', () => {
-      this.contentShareTypeChanged(ContentShareType.Example);
+      const videoFile = document.getElementById('content-share-video') as HTMLVideoElement;
+      if (videoFile.src !== DemoMeetingApp.testVideo) {
+        videoFile.src = DemoMeetingApp.testVideo;
+      }
+      this.contentShareTypeChanged(ContentShareType.VideoFile);
+    });
+
+    document.getElementById('content-share-item').addEventListener('change', () => {
+      const fileList = document.getElementById('content-share-item') as HTMLInputElement;
+      const file = fileList.files[0];
+      if (!file) {
+        this.log('no content share selected');
+        return;
+      }
+      const url = URL.createObjectURL(file);
+      this.log(`content share selected: ${url}`);
+      const videoFile = document.getElementById('content-share-video') as HTMLVideoElement;
+      videoFile.src = url;
+      fileList.value = '';
+      this.contentShareTypeChanged(ContentShareType.VideoFile);
     });
   }
 
@@ -1011,12 +1030,12 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       case ContentShareType.ScreenCapture:
         this.audioVideo.startContentShareFromScreenCapture();
         break;
-      case ContentShareType.Example:
-        const exampleVideo = document.getElementById('content-share-video') as HTMLVideoElement;
-        exampleVideo.style.display = 'block';
-        exampleVideo.play();
+      case ContentShareType.VideoFile:
+        const videoFile = document.getElementById('content-share-video') as HTMLVideoElement;
+        videoFile.style.display = 'block';
+        videoFile.play();
         // @ts-ignore
-        const mediaStream: MediaStream = exampleVideo.captureStream();
+        const mediaStream: MediaStream = videoFile.captureStream();
         this.audioVideo.startContentShare(mediaStream);
         break;
     }
@@ -1028,10 +1047,10 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     }
     this.toggleButton('button-content-share');
     this.audioVideo.stopContentShare();
-    if (this.contentShareType === ContentShareType.Example) {
-      const exampleVideo = document.getElementById('content-share-video') as HTMLVideoElement;
-      exampleVideo.load();
-      exampleVideo.style.display = 'none';
+    if (this.contentShareType === ContentShareType.VideoFile) {
+      const videoFile = document.getElementById('content-share-video') as HTMLVideoElement;
+      videoFile.load();
+      videoFile.style.display = 'none';
     }
   }
 
