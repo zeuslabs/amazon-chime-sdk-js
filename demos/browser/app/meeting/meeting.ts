@@ -92,6 +92,11 @@ class TestSound {
   }
 }
 
+export enum ContentShareType {
+  ScreenCapture,
+  Example,
+};
+
 export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver {
   showActiveSpeakerScores = false;
   activeSpeakerLayout = true;
@@ -119,10 +124,11 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     'button-microphone': true,
     'button-camera': false,
     'button-speaker': true,
-    'button-screen-capture': false,
     'button-content-share': false,
     'button-pause-content-share': false,
   };
+
+  contentShareType: ContentShareType = ContentShareType.ScreenCapture;
 
   // feature flags
   enableWebAudio = false;
@@ -337,24 +343,11 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       });
     });
 
-    const buttonScreenCapture = document.getElementById('button-screen-capture');
-    buttonScreenCapture.addEventListener('click', _e => {
-      new AsyncScheduler().start(async () => {
-        if (!this.isButtonOn('button-screen-capture')) {
-          this.toggleButton('button-screen-capture');
-          this.audioVideo.startContentShareFromScreenCapture();
-        } else {
-          if (this.isButtonOn('button-pause-content-share')) {
-            this.toggleButton('button-pause-content-share');
-          }
-          this.toggleButton('button-screen-capture');
-          this.audioVideo.stopContentShare();
-        }
-      });
-    });
-
     const buttonPauseContentShare = document.getElementById('button-pause-content-share');
     buttonPauseContentShare.addEventListener('click', _e => {
+      if (!this.isButtonOn('button-content-share')) {
+        return;
+      }
       new AsyncScheduler().start(async () => {
         if (this.toggleButton('button-pause-content-share')) {
           this.audioVideo.pauseContentShare();
@@ -367,17 +360,32 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     const buttonContentShare = document.getElementById('button-content-share');
     buttonContentShare.addEventListener('click', _e => {
       new AsyncScheduler().start(async () => {
-        const video = document.getElementById('content-share-video') as HTMLVideoElement;
-        if (this.toggleButton('button-content-share')) {
-          video.style.display = 'block';
-          video.play();
-          // @ts-ignore
-          const mediaStream: MediaStream = video.captureStream();
-          this.audioVideo.startContentShare(mediaStream);
+        if (!this.isButtonOn('button-content-share')) {
+          this.toggleButton('button-content-share');
+          switch (this.contentShareType) {
+            case ContentShareType.ScreenCapture:
+              this.audioVideo.startContentShareFromScreenCapture();
+              break;
+            case ContentShareType.Example:
+              const exampleVideo = document.getElementById('content-share-video') as HTMLVideoElement;
+              exampleVideo.style.display = 'block';
+              exampleVideo.play();
+              // @ts-ignore
+              const mediaStream: MediaStream = exampleVideo.captureStream();
+              this.audioVideo.startContentShare(mediaStream);
+              break;
+          }
         } else {
+          if (this.isButtonOn('button-pause-content-share')) {
+            this.toggleButton('button-pause-content-share');
+          }
+          this.toggleButton('button-content-share');
           this.audioVideo.stopContentShare();
-          video.load();
-          video.style.display = 'none';
+          if (this.contentShareType === ContentShareType.Example) {
+            const exampleVideo = document.getElementById('content-share-video') as HTMLVideoElement;
+            exampleVideo.load();
+            exampleVideo.style.display = 'none';
+          }
         }
       });
     });
@@ -528,6 +536,7 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     this.setupCanUnmuteHandler();
     this.setupSubscribeToAttendeeIdPresenceHandler();
     this.audioVideo.addObserver(this);
+    this.initContentShareDropDownItems();
   }
 
   setClickHandler(elementId: string, f: () => void): void {
@@ -991,6 +1000,18 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       return null;
     }
     return value;
+  }
+
+  private initContentShareDropDownItems(): void {
+    let item = document.getElementById('dropdown-item-content-share-screen-capture');
+    item.addEventListener('click', () => {
+      this.contentShareType = ContentShareType.ScreenCapture;
+    });
+
+    item = document.getElementById('dropdown-item-content-share-screen-example');
+    item.addEventListener('click', () => {
+      this.contentShareType = ContentShareType.Example;
+    });
   }
 
   async authenticate(): Promise<void> {

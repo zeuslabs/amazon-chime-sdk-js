@@ -200,8 +200,8 @@
       <div class="text-muted" style="position:fixed;left:3px;bottom:3px" id="video-uplink-bandwidth"></div>
       <div class="text-muted" style="position:fixed;right:3px;bottom:3px" id="video-downlink-bandwidth"></div>
       <audio id="meeting-audio" style="display:none"></audio>
-      <div class="container-fluid h-100">
-        <div class="row">
+      <div class="container-fluid h-100" style="display:flex; flex-flow:column">
+        <div class="row" style="height:60px">
           <div class="col-1 text-left">
             <div id="meeting-id" class="navbar-brand text-muted m-2"></div>
           </div>
@@ -228,13 +228,20 @@
                 </div>
               </div>
             </div>
-            <button id="button-screen-capture" type="button" class="btn btn-outline-secondary m-2" title="Toggle screen capture">
-              ${require('../../node_modules/open-iconic/svg/monitor.svg').default}
-            </button>
-            <button id="button-pause-content-share" type="button" class="btn btn-outline-secondary m-2" title="Pause and unpause content share">
+            <div class="btn-group m-2" role="group" aria-label="Toggle content share">
+              <button id="button-content-share" type="button" class="btn btn-success" title="Toggle content share">
+                  ${require('../../node_modules/open-iconic/svg/camera-slr.svg').default}
+              </button>
+              <div class="btn-group" role="group">
+                <button id="button-content-share-drop" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Select content to share"></button>
+                <div id="dropdown-menu-content-share" class="dropdown-menu" aria-labelledby="button-content-share-drop" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                  <a id="dropdown-item-content-share-screen-capture" class="dropdown-item" href="#">Screen capture</a>
+                  <a id="dropdown-item-content-share-screen-example" class="dropdown-item" href="#">Example</a>
+                </div>
+              </div>
+            </div>
+            <button id="button-pause-content-share" type="button" class="btn btn-success" title="Pause and unpause content share">
               ${require('../../node_modules/open-iconic/svg/media-pause.svg').default}
-            <button id="button-content-share" type="button" class="btn btn-outline-secondary m-2" title="Toggle content share">
-              ${require('../../node_modules/open-iconic/svg/camera-slr.svg').default}
             </button>
           </div>
           <div class="col-4 text-left">
@@ -259,7 +266,7 @@
             </button>
           </div>
         </div>
-        <div class="row h-100">
+        <div class="row" style="flex-grow: 1">
           <div class="col-sm-4">
             <div class="bs-component">
               <ul id="roster" class="list-group"></ul>
