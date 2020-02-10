@@ -7,6 +7,7 @@ import AsyncScheduler from '../scheduler/AsyncScheduler';
 import VideoTileController from '../videotilecontroller/VideoTileController';
 import VideoTile from './VideoTile';
 import VideoTileState from './VideoTileState';
+import Modality from "../modality/Modality";
 
 export default class DefaultVideoTile implements DevicePixelRatioObserver, VideoTile {
   private tileState: VideoTileState = new VideoTileState();
@@ -111,6 +112,9 @@ export default class DefaultVideoTile implements DevicePixelRatioObserver, Video
     let tileUpdated = false;
     if (this.tileState.boundAttendeeId !== attendeeId) {
       this.tileState.boundAttendeeId = attendeeId;
+      if (new Modality(attendeeId).hasModality(Modality.MODALITY_CONTENT)) {
+        this.tileState.isContent = true;
+      }
       tileUpdated = true;
     }
     if (this.tileState.localTile !== localTile) {

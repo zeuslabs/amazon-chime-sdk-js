@@ -94,7 +94,7 @@ class TestSound {
 
 export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver {
   showActiveSpeakerScores = false;
-  activeSpeakerLayout = false;
+  activeSpeakerLayout = true;
   meeting: string | null = null;
   name: string | null = null;
   voiceConnectorId: string | null = null;
@@ -1084,7 +1084,21 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     return null;
   }
 
+  findContentTileId(): number | null {
+    for (const tile of this.audioVideo.getAllVideoTiles()) {
+      const state = tile.state();
+      if (state.isContent) {
+        return state.tileId;
+      }
+    }
+    return null;
+  }
+
   activeTileId(): number | null {
+    let contentTileId = this.findContentTileId();
+    if (contentTileId !== null) {
+      return contentTileId;
+    }
     for (const attendeeId in this.roster) {
       if (this.roster[attendeeId].active) {
         return this.tileIdForAttendeeId(attendeeId);
@@ -1107,10 +1121,11 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
         visibleTileIndices[0] === selfTileId ? visibleTileIndices[1] : visibleTileIndices[0]
       ];
     }
-    const hasVisibleActiveSpeaker = visibleTileIndices.includes(
+    const hasVisibleActiveTile = visibleTileIndices.includes(
       this.tileIdToTileIndex[activeTileId]
     );
-    if (this.activeSpeakerLayout && hasVisibleActiveSpeaker) {
+
+    if (this.activeSpeakerLayout && hasVisibleActiveTile) {
       this.layoutVideoTilesActiveSpeaker(visibleTileIndices, activeTileId);
     } else {
       this.layoutVideoTilesGrid(visibleTileIndices);
