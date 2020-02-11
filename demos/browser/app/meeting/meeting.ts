@@ -993,11 +993,7 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
 
     item = document.getElementById('dropdown-item-content-share-screen-test-video');
     item.addEventListener('click', () => {
-      const videoFile = document.getElementById('content-share-video') as HTMLVideoElement;
-      if (videoFile.src !== DemoMeetingApp.testVideo) {
-        videoFile.src = DemoMeetingApp.testVideo;
-      }
-      this.contentShareTypeChanged(ContentShareType.VideoFile);
+      this.contentShareTypeChanged(ContentShareType.VideoFile, DemoMeetingApp.testVideo);
     });
 
     document.getElementById('content-share-item').addEventListener('change', () => {
@@ -1009,22 +1005,20 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       }
       const url = URL.createObjectURL(file);
       this.log(`content share selected: ${url}`);
-      const videoFile = document.getElementById('content-share-video') as HTMLVideoElement;
-      videoFile.src = url;
+      this.contentShareTypeChanged(ContentShareType.VideoFile, url);
       fileList.value = '';
-      this.contentShareTypeChanged(ContentShareType.VideoFile);
     });
   }
 
-  private async contentShareTypeChanged(contentShareType: ContentShareType): Promise<void> {
+  private async contentShareTypeChanged(contentShareType: ContentShareType, videoUrl?: string): Promise<void> {
     if (this.isButtonOn('button-content-share')) {
       await this.contentShareStop();
     }
     this.contentShareType = contentShareType;
-    this.contentShareStart();
+    await this.contentShareStart(videoUrl);
   }
 
-  private async contentShareStart(): Promise<void> {
+  private async contentShareStart(videoUrl?: string): Promise<void> {
     this.toggleButton('button-content-share');
     switch (this.contentShareType) {
       case ContentShareType.ScreenCapture:
@@ -1033,7 +1027,10 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       case ContentShareType.VideoFile:
         const videoFile = document.getElementById('content-share-video') as HTMLVideoElement;
         videoFile.style.display = 'block';
-        videoFile.play();
+        if (videoUrl) {
+          videoFile.src = videoUrl;
+        }
+        await videoFile.play();
         // @ts-ignore
         const mediaStream: MediaStream = videoFile.captureStream();
         this.audioVideo.startContentShare(mediaStream);
@@ -1049,7 +1046,6 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     this.audioVideo.stopContentShare();
     if (this.contentShareType === ContentShareType.VideoFile) {
       const videoFile = document.getElementById('content-share-video') as HTMLVideoElement;
-      videoFile.load();
       videoFile.style.display = 'none';
     }
   }

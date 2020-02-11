@@ -82,7 +82,9 @@ export default class DefaultContentShareController
 
   stopContentShare(): void {
     this.audioVideo.stop();
-    this.mediaStream.getTracks()[0].stop();
+    if (this.mediaStream && this.mediaStream.getTracks().length > 0) {
+      this.mediaStream.getTracks()[0].stop();
+    }
     this.mediaStream = null;
   }
 
