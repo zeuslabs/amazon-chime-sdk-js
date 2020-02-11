@@ -1046,6 +1046,7 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     this.audioVideo.stopContentShare();
     if (this.contentShareType === ContentShareType.VideoFile) {
       const videoFile = document.getElementById('content-share-video') as HTMLVideoElement;
+      videoFile.pause();
       videoFile.style.display = 'none';
     }
   }
