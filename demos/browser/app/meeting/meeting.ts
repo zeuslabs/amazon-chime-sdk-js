@@ -629,6 +629,11 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
             let name = json.AttendeeInfo.Name;
             if (baseAttendeeId !== attendeeId) {
               name += " «Content»";
+              const selfAttendeeId = this.meetingSession.configuration.credentials.attendeeId;
+              //If someone else share content, stop the current content share
+              if (selfAttendeeId !== baseAttendeeId && this.isButtonOn('button-content-share')) {
+                this.contentShareStop();
+              }
             }
             this.roster[attendeeId].name = name ? name : '';
           }
