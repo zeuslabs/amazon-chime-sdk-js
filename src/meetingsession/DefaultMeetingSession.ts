@@ -8,6 +8,7 @@ import DefaultAudioVideoFacade from '../audiovideofacade/DefaultAudioVideoFacade
 import FullJitterBackoff from '../backoff/FullJitterBackoff';
 import DefaultBrowserBehavior from '../browserbehavior/DefaultBrowserBehavior';
 import ContentShareController from '../contentsharecontroller/ContentShareController';
+import ContentShareMediaStreamBroker from '../contentsharecontroller/ContentShareMediaStreamBroker';
 import DefaultContentShareController from '../contentsharecontroller/DefaultContentShareController';
 import DeviceController from '../devicecontroller/DeviceController';
 import Logger from '../logger/Logger';
@@ -69,17 +70,33 @@ export default class DefaultMeetingSession implements MeetingSession {
       this._configuration,
       this._logger
     );
+    let contentShareMediaStreamBroker = new ContentShareMediaStreamBroker(this._logger);
     this.contentShareController = new DefaultContentShareController(
-      this._logger,
-      this._configuration
+      contentShareMediaStreamBroker,
+      new DefaultAudioVideoController(
+        DefaultContentShareController.createContentShareMeetingSessionConfigure(
+          this._configuration
+        ),
+        this._logger,
+        new DefaultWebSocketAdapter(this._logger),
+        contentShareMediaStreamBroker,
+        new DefaultReconnectController(
+          DefaultMeetingSession.RECONNECT_TIMEOUT_MS,
+          new FullJitterBackoff(
+            DefaultMeetingSession.RECONNECT_FIXED_WAIT_MS,
+            DefaultMeetingSession.RECONNECT_SHORT_BACKOFF_MS,
+            DefaultMeetingSession.RECONNECT_LONG_BACKOFF_MS
+          )
+        )
+      )
     );
     this.audioVideoFacade = new DefaultAudioVideoFacade(
       this.audioVideoController,
       this.audioVideoController.videoTileController,
       this.audioVideoController.realtimeController,
       this.audioVideoController.audioMixController,
-      this.audioVideoController.deviceController,
-      this.contentShareController,
+      this._deviceController,
+      this.contentShareController
     );
     this.checkBrowserSupport();
   }

@@ -22,7 +22,7 @@ export default class DefaultAudioVideoFacade implements AudioVideoFacade {
     private realtimeController: RealtimeController,
     private audioMixController: AudioMixController,
     private deviceController: DeviceController,
-    private contentShareController: ContentShareController,
+    private contentShareController: ContentShareController
   ) {}
 
   addObserver(observer: AudioVideoObserver): void {

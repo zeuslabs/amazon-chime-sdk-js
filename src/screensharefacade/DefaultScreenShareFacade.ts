@@ -33,9 +33,10 @@ export default class DefaultScreenShareFacade implements ScreenShareFacade {
   async open(): Promise<void> {
     this.logger.warn(
       'ScreenShareFacade has been deprecated and will be removed ' +
-      'beginning with version 2.0.0. Instead use the ' +
-      'startContentShareFromScreenCapture() and stopContentShare() methods ' +
-      'on the AudioVideoFacade.');
+        'beginning with version 2.0.0. Instead use the ' +
+        'startContentShareFromScreenCapture() and stopContentShare() methods ' +
+        'on the AudioVideoFacade.'
+    );
     await new RunnableTask<Event>(
       this.logger,
       (): Promise<Event> => {

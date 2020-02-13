@@ -62,9 +62,10 @@ export default class DefaultScreenShareViewFacade implements ScreenShareViewFaca
   start(element: HTMLDivElement): Promise<void> {
     this.logger.warn(
       'ScreenShareViewFacade has been deprecated and will be removed ' +
-      'beginning with version 2.0.0. Instead use the ' +
-      'startContentShareFromScreenCapture() and stopContentShare() methods ' +
-      'on the AudioVideoFacade.');
+        'beginning with version 2.0.0. Instead use the ' +
+        'startContentShareFromScreenCapture() and stopContentShare() methods ' +
+        'on the AudioVideoFacade.'
+    );
     return this.screenViewing.start(element);
   }
 

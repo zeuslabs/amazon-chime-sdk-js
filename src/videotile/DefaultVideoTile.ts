@@ -3,11 +3,11 @@
 
 import DevicePixelRatioMonitor from '../devicepixelratiomonitor/DevicePixelRatioMonitor';
 import DevicePixelRatioObserver from '../devicepixelratioobserver/DevicePixelRatioObserver';
+import Modality from '../modality/Modality';
 import AsyncScheduler from '../scheduler/AsyncScheduler';
 import VideoTileController from '../videotilecontroller/VideoTileController';
 import VideoTile from './VideoTile';
 import VideoTileState from './VideoTileState';
-import Modality from "../modality/Modality";
 
 export default class DefaultVideoTile implements DevicePixelRatioObserver, VideoTile {
   private tileState: VideoTileState = new VideoTileState();
