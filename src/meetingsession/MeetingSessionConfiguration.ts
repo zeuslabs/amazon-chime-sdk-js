@@ -26,6 +26,10 @@ export default class MeetingSessionConfiguration {
    * The URLs the session uses to reach the meeting service.
    */
   urls: MeetingSessionURLs | null = null;
+  /**
+   * Maximum amount of time in milliseconds to allow for connecting.
+   */
+  sendCloudWatchLogsIntervalMs: number = 10000;
 
   /**
    * Maximum amount of time in milliseconds to allow for connecting.

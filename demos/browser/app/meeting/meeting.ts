@@ -9,7 +9,7 @@ import {
   AudioVideoFacade,
   AudioVideoObserver,
   ClientMetricReport,
-  ConsoleLogger,
+  POSTRequestLogger,
   DefaultActiveSpeakerPolicy,
   DefaultAudioMixController,
   DefaultDeviceController,
@@ -128,7 +128,7 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
 
   // feature flags
   enableWebAudio = false;
-
+  logger: POSTRequestLogger | null = null;
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (global as any).app = this;
@@ -442,22 +442,31 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
       }
       new AsyncScheduler().start(async () => {
         (buttonMeetingEnd as HTMLButtonElement).disabled = true;
+        (buttonMeetingLeave as HTMLButtonElement).disabled = true;
         await this.endMeeting();
         this.leave();
-        (buttonMeetingEnd as HTMLButtonElement).disabled = false;
+        //await this.logger.publishToCloudWatchCaller(true);
         // @ts-ignore
         window.location = window.location.pathname;
+
+        //await this.logger.publishToCloudWatchCaller(true);
+        (buttonMeetingEnd as HTMLButtonElement).disabled = false;
+        (buttonMeetingLeave as HTMLButtonElement).disabled = false;
       });
     });
 
     const buttonMeetingLeave = document.getElementById('button-meeting-leave');
     buttonMeetingLeave.addEventListener('click', _e => {
       new AsyncScheduler().start(async () => {
+        (buttonMeetingEnd as HTMLButtonElement).disabled = true;
         (buttonMeetingLeave as HTMLButtonElement).disabled = true;
         this.leave();
-        (buttonMeetingLeave as HTMLButtonElement).disabled = false;
+        //await this.logger.publishToCloudWatchCaller(true);
         // @ts-ignore
         window.location = window.location.pathname;
+        //await this.logger.publishToCloudWatchCaller(true);
+        (buttonMeetingEnd as HTMLButtonElement).disabled = false;
+        (buttonMeetingLeave as HTMLButtonElement).disabled = false;
       });
     });
   }
@@ -548,11 +557,13 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     }
   }
 
+
   async initializeMeetingSession(configuration: MeetingSessionConfiguration): Promise<void> {
-    const logger = new ConsoleLogger('SDK', LogLevel.DEBUG);
-    const deviceController = new DefaultDeviceController(logger);
+    this.logger = new POSTRequestLogger('SDK', LogLevel.INFO, configuration.meetingId, configuration.credentials.attendeeId, configuration.sendCloudWatchLogsIntervalMs, DemoMeetingApp.BASE_URL);
+    this.logger.publishToCloudWatchCaller(false);
+    const deviceController = new DefaultDeviceController(this.logger);
     configuration.enableWebAudio = this.enableWebAudio;
-    this.meetingSession = new DefaultMeetingSession(configuration, logger, deviceController);
+    this.meetingSession = new DefaultMeetingSession(configuration, this.logger, deviceController);
     this.audioVideo = this.meetingSession.audioVideo;
 
     this.audioVideo.addDeviceChangeObserver(this);
