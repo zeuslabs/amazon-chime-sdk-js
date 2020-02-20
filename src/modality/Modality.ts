@@ -22,7 +22,7 @@ export default class Modality {
   }
 
   modality(): string {
-    if (this._id === '') {
+    if (!this._id) {
       return '';
     }
     const components = this._id.split(Modality.MODALITY_SEPARATOR);

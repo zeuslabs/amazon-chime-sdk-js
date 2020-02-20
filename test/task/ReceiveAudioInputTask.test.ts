@@ -4,7 +4,6 @@
 import DefaultAudioMixController from '../../src/audiomixcontroller/DefaultAudioMixController';
 import AudioVideoControllerState from '../../src/audiovideocontroller/AudioVideoControllerState';
 import NoOpAudioVideoController from '../../src/audiovideocontroller/NoOpAudioVideoController';
-import DefaultDeviceController from '../../src/devicecontroller/DefaultDeviceController';
 import NoOpMediaStreamBroker from '../../src/mediastreambroker/NoOpMediaStreamBroker';
 import DefaultRealtimeController from '../../src/realtimecontroller/DefaultRealtimeController';
 import ReceiveAudioInputTask from '../../src/task/ReceiveAudioInputTask';
@@ -41,7 +40,6 @@ describe('ReceiveAudioInputTask', () => {
     context = new AudioVideoControllerState();
     context.audioVideoController = new NoOpAudioVideoController();
     context.logger = context.audioVideoController.logger;
-    context.deviceController = new DefaultDeviceController(context.audioVideoController.logger);
     context.mediaStreamBroker = new MockMediaStreamBroker({
       acquireAudioInputDeviceSucceeds: true,
     });

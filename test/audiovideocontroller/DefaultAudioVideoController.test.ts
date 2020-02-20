@@ -28,6 +28,7 @@ import {
 import DefaultWebSocketAdapter from '../../src/websocketadapter/DefaultWebSocketAdapter';
 import DOMMockBehavior from '../dommock/DOMMockBehavior';
 import DOMMockBuilder from '../dommock/DOMMockBuilder';
+import NoOpMediaStreamBroker from "../../src/mediastreambroker/NoOpMediaStreamBroker";
 
 describe('DefaultAudioVideoController', () => {
   const expect: Chai.ExpectStatic = chai.expect;
@@ -204,7 +205,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       let sessionStarted = false;
@@ -250,7 +251,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
 
@@ -295,7 +296,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       let sessionStarted = false;
@@ -316,7 +317,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       const spy = sinon.spy(audioVideoController, 'handleMeetingSessionStatus');
@@ -336,7 +337,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       let event = 0;
@@ -391,7 +392,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       class TestObserver implements AudioVideoObserver {
@@ -427,7 +428,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       class TestObserver implements AudioVideoObserver {
@@ -447,14 +448,14 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       audioVideoController.stop();
     });
 
     it('performs the FinishDisconnecting action even when stopping and cleaning fail', async () => {
-      class MockDeviceController extends NoOpDeviceController {
+      class MockDeviceController extends NoOpMediaStreamBroker {
         releaseMediaStream(_mediaStreamToRelease: MediaStream): void {
           throw new Error('Force CleanStoppedSessionTask to fail');
         }
@@ -494,7 +495,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       // @ts-ignore
@@ -524,7 +525,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       let sessionStarted = false;
@@ -553,7 +554,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       class TestObserver implements AudioVideoObserver {
@@ -589,7 +590,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       const stopLocalVideoTileSpy = sinon.spy(
@@ -623,7 +624,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       const stopLocalVideoTileSpy = sinon.spy(
@@ -654,7 +655,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
 
@@ -667,7 +668,7 @@ describe('DefaultAudioVideoController', () => {
 
       expect(success).to.be.false;
 
-      class TestDeviceController extends NoOpDeviceController {
+      class TestDeviceController extends NoOpMediaStreamBroker {
         async acquireAudioInputStream(): Promise<MediaStream> {
           const mediaStream = new MediaStream();
           return mediaStream;
@@ -732,7 +733,6 @@ describe('DefaultAudioVideoController', () => {
         reconnectController
       );
 
-      audioVideoController.deviceController.enableWebAudio(false);
       let sessionStarted = false;
       let sessionConnecting = false;
       class TestObserver implements AudioVideoObserver {
@@ -778,7 +778,7 @@ describe('DefaultAudioVideoController', () => {
         new TestDeviceController(),
         reconnectController
       );
-      audioVideoController.deviceController.enableWebAudio(false);
+
       let sessionStarted = false;
       let sessionConnecting = false;
       class TestObserver implements AudioVideoObserver {
@@ -824,7 +824,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       class TestObserver implements AudioVideoObserver {
@@ -873,7 +873,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       class TestObserver implements AudioVideoObserver {
@@ -899,7 +899,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       class TestObserver implements AudioVideoObserver {
@@ -941,7 +941,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       class TestObserver implements AudioVideoObserver {
@@ -978,7 +978,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       class TestObserver implements AudioVideoObserver {
@@ -1011,7 +1011,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       class TestObserver implements AudioVideoObserver {
@@ -1045,7 +1045,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
       const reconnectSpy = sinon.spy(audioVideoController, 'reconnect');
@@ -1074,16 +1074,15 @@ describe('DefaultAudioVideoController', () => {
 
   describe('getters', () => {
     it('returns a device controller for the mediaStreamBroker and deviceController getter', () => {
-      const deviceController = new NoOpDeviceController();
+      const mediaStreamBroker = new NoOpMediaStreamBroker();
       audioVideoController = new DefaultAudioVideoController(
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        deviceController,
+        mediaStreamBroker,
         reconnectController
       );
-      expect(deviceController).to.equal(audioVideoController.mediaStreamBroker);
-      expect(deviceController).to.equal(audioVideoController.deviceController);
+      expect(mediaStreamBroker).to.equal(audioVideoController.mediaStreamBroker);
     });
   });
 
@@ -1093,7 +1092,7 @@ describe('DefaultAudioVideoController', () => {
         configuration,
         new NoOpDebugLogger(),
         webSocketAdapter,
-        new NoOpDeviceController(),
+        new NoOpMediaStreamBroker(),
         reconnectController
       );
     });

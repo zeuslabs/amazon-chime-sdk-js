@@ -1,4 +1,4 @@
-// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 import AudioVideoController from '../audiovideocontroller/AudioVideoController';
@@ -81,14 +81,18 @@ export default class ContentShareMediaStreamBroker implements MediaStreamBroker 
   }
 
   toggleMediaStream(enable: boolean): void {
-    if (this.mediaStream !== null && this.mediaStream.getTracks().length > 0) {
-      this.mediaStream.getTracks()[0].enabled = enable;
+    if (this.mediaStream) {
+      for (let i = 0; i < this.mediaStream.getTracks().length; i++) {
+        this.mediaStream.getTracks()[i].enabled = enable;
+      }
     }
   }
 
   cleanup(): void {
-    if (this.mediaStream && this.mediaStream.getTracks().length > 0) {
-      this.mediaStream.getTracks()[0].stop();
+    if (this.mediaStream) {
+      for (let i = 0; i < this.mediaStream.getTracks().length; i++) {
+        this.mediaStream.getTracks()[i].stop();
+      }
     }
     this.mediaStream = null;
   }

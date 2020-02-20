@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import FullJitterBackoff from '../backoff/FullJitterBackoff';
-import NoOpDeviceController from '../devicecontroller/NoOpDeviceController';
 import NoOpDebugLogger from '../logger/NoOpDebugLogger';
 import MeetingSessionConfiguration from '../meetingsession/MeetingSessionConfiguration';
 import MeetingSessionCredentials from '../meetingsession/MeetingSessionCredentials';
@@ -10,6 +9,7 @@ import MeetingSessionURLs from '../meetingsession/MeetingSessionURLs';
 import DefaultReconnectController from '../reconnectcontroller/DefaultReconnectController';
 import DefaultWebSocketAdapter from '../websocketadapter/DefaultWebSocketAdapter';
 import DefaultAudioVideoController from './DefaultAudioVideoController';
+import NoOpMediaStreamBroker from "../mediastreambroker/NoOpMediaStreamBroker";
 
 export default class NoOpAudioVideoController extends DefaultAudioVideoController {
   constructor(configuration?: MeetingSessionConfiguration) {
@@ -29,7 +29,7 @@ export default class NoOpAudioVideoController extends DefaultAudioVideoControlle
       configuration ? configuration : emptyConfiguration,
       new NoOpDebugLogger(),
       new DefaultWebSocketAdapter(new NoOpDebugLogger()),
-      new NoOpDeviceController(),
+      new NoOpMediaStreamBroker(),
       new DefaultReconnectController(0, new FullJitterBackoff(0, 0, 0))
     );
   }

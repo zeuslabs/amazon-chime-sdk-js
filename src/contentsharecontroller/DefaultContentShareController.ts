@@ -29,6 +29,9 @@ export default class DefaultContentShareController implements ContentShareContro
   ) {}
 
   async startContentShare(stream: MediaStream): Promise<void> {
+    if (!stream) {
+      return;
+    }
     this.mediaStreamBroker.mediaStream = stream;
     this.audioVideo.start();
     if (this.mediaStreamBroker.mediaStream.getVideoTracks().length > 0) {
