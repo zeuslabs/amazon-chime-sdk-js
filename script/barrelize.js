@@ -34,7 +34,8 @@ walk('src')
     if (
       typeToImport === 'SignalingProtocol' ||
       typeToImport === 'index' ||
-      typeToImport === 'ScreenSignalingProtocol'
+      typeToImport === 'ScreenSignalingProtocol' ||
+      typeToImport === 'entry'
     ) {
       return;
     }
