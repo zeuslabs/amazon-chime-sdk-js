@@ -22,9 +22,12 @@ export default class DefaultVideoStreamIndex implements VideoStreamIndex {
   private streamToAttendeeMap: Map<number, string> | null = null;
   private ssrcToStreamMap: Map<number, number> | null = null;
 
-  constructor(private logger: Logger) {}
+  constructor(private logger: Logger, private ignoreVideoSources: boolean) {}
 
   integrateIndexFrame(indexFrame: SdkIndexFrame): void {
+    if (this.ignoreVideoSources) {
+      indexFrame.sources = [];
+    }
     this.currentIndex = indexFrame;
     this.streamToAttendeeMap = null;
     this.ssrcToStreamMap = null;

@@ -198,7 +198,7 @@ export default class DefaultAudioVideoController implements AudioVideoController
       DefaultAudioVideoController.MAX_VOLUME_DECIBELS
     );
     this.meetingSessionContext.videoTileController = this._videoTileController;
-    this.meetingSessionContext.videoStreamIndex = new DefaultVideoStreamIndex(this.logger);
+    this.meetingSessionContext.videoStreamIndex = new DefaultVideoStreamIndex(this.logger, this.configuration.ignoreVideoSources);
     this.meetingSessionContext.videoDownlinkBandwidthPolicy = new AllHighestVideoBandwidthPolicy(
       this.configuration.credentials.attendeeId
     );
