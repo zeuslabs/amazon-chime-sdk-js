@@ -10,8 +10,6 @@ import ControllerShim from './shim/Controller';
 
 import routes from './routes';
 
-import './App.css';
-
 const App = () => {
   return (
     <Router>

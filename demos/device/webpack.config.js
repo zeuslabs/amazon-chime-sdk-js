@@ -1,47 +1,83 @@
-require('dotenv').config({ path: '../.env' })
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+/* eslint-disable */
 const path = require('path');
+const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+/* eslint-enable */
 
-module.exports = env => {
-    return {
-        entry: [`./src/index.js`],
-        output: {
-            path: path.join(__dirname, 'public'),
-            filename: 'bundle.js'
-        },
-        module: {
-            rules: [{
-                    test: /\.(js|jsx)$/,
-                    exclude: /node_modules/,
-                    use: {
-                        loader: "babel-loader"
-                    }
-                },
-                {
-                    test: /\.css$/,
-                    use: ['style-loader', 'css-loader']
-                },
-                {
-                    test: /\.(svg)$/,
-                    loader: 'raw-loader',
-                }
-            ]
-        },
-        devServer: {
-            historyApiFallback: true,
-            proxy: {
-                '/api': {
-                    target: `http://localhost:8080`,
-                    pathRewrite: { '^/api': '' }
-                },
+const app = 'device';
 
-            },
-            contentBase: path.join(__dirname, 'public'),
-            compress: true,
-            hot: true,
-            host: '0.0.0.0',
-            disableHostCheck: true,
-            port: 3000,
+module.exports = {
+  plugins: [
+    new HtmlWebpackPlugin({
+      inlineSource: '.(js|css)$',
+      template: __dirname + `/app/${app}.html`,
+      filename: __dirname + `/dist/${app}.html`,
+      inject: 'head',
+    }),
+    new HtmlWebpackInlineSourcePlugin(),
+  ],
+  entry: [`./src/index.js`],
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: `${app}-bundle.js`,
+    publicPath: '/',
+    libraryTarget: 'var',
+    library: `app_${app}`,
+  },
+  resolve: {
+    extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(tsx|ts)?$/,
+        exclude: /node_modules/,
+        loader: 'awesome-typescript-loader',
+      },
+      {
+        test: /\.(jsx|js)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
         },
-        devtool: 'cheap-module-eval-source-map'
-    }
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(svg)$/,
+        loader: 'raw-loader',
+      },
+    ],
+  },
+  devServer: {
+    historyApiFallback: true,
+    proxy: {
+      '/': {
+        target: 'http://localhost:8080',
+        bypass: function(req, _res, _proxyOptions) {
+          if (req.headers.accept.indexOf('html') !== -1) {
+            console.log('Skipping proxy for browser request.');
+            return `/${app}.html`;
+          }
+        },
+      },
+    },
+    contentBase: path.join(__dirname, 'dist'),
+    index: `${app}.html`,
+    compress: true,
+    hot: true,
+    host: '0.0.0.0',
+    disableHostCheck: true,
+    port: 3000,
+  },
+  performance: {
+    hints: false,
+  },
+  mode: 'development',
+  devtool: 'cheap-module-eval-source-map',
 };

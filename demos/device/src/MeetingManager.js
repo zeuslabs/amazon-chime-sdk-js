@@ -1,11 +1,17 @@
 import {
-  MeetingSessionConfiguration,
-  DefaultMeetingSession,
-  DefaultDeviceController,
   ConsoleLogger,
+  DefaultDeviceController,
+  DefaultMeetingSession,
   LogLevel,
-} from 'amazon-chime-sdk-js';
+  MeetingSessionConfiguration,
+} from '../../../src/index';
 
+const BASE_URL = [
+  location.protocol,
+  '//',
+  location.host,
+  location.pathname.replace(/\/*$/, '/').replace('/device', ''),
+].join('');
 class MeetingManager {
   constructor() {
     this.title = null;
@@ -45,7 +51,7 @@ class MeetingManager {
 
   async joinMeeting(meetingId, name) {
     try {
-      const url = `/api/join?title=${encodeURIComponent(meetingId)}&name=${encodeURIComponent(
+      const url = `${BASE_URL}join?title=${encodeURIComponent(meetingId)}&name=${encodeURIComponent(
         name
       )}`;
       const res = await fetch(url, { method: 'POST' });
@@ -61,7 +67,7 @@ class MeetingManager {
   }
 
   async endMeeting() {
-    await fetch(`/api/end?title=${encodeURIComponent(this.title)}`, {
+    await fetch(`${BASE_URL}end?title=${encodeURIComponent(this.title)}`, {
       method: 'POST',
     });
     this.leaveMeeting();
