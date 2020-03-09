@@ -1,13 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import RoomProvider from './containers/RoomProvider';
-import RoomShim from './shim/Room';
-import Meeting from './views/Meeting';
-import Home from './views/Home';
-import Controller from './views/Controller';
-import ControllerShim from './shim/Controller';
-
+import RoomProvider from './room/containers/RoomProvider';
+import RoomShim from './shim/RoomShim';
+import Meeting from './room/views/Meeting';
+import Home from './room/views/Home';
+import Controller from './controller/views/Controller';
+import ControllerShim from './shim/ControllerShim';
 import routes from './routes';
 
 const App = () => {

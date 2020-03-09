@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-import MeetingManager from '../MeetingManager';
+import MeetingManager from '../../MeetingManager';
 
 const AudioManager = () => {
   const audioRef = useRef();

@@ -1,8 +1,8 @@
 import React, { useReducer, useEffect } from 'react';
 
-import MeetingManager from '../MeetingManager';
+import MeetingManager from '../../MeetingManager';
 import VideoGrid from '../components/VideoGrid';
-import VideoTile from './VideoTile';
+import VideoTile from '../components/VideoTile';
 
 function reducer(state, { type, payload }) {
   switch (type) {
@@ -44,6 +44,8 @@ const VideoManager = () => {
 
   useEffect(() => {
     MeetingManager.addObserver(observers);
+
+    return () => MeetingManager.removeObserver(observers);
   }, []);
 
   const videos = Object.keys(state).map(tileId => (

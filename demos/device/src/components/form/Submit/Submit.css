@@ -1,0 +1,10 @@
+.Submit {
+  display: block;
+  padding: .8rem 2.4rem;
+  margin: 0 auto;
+  border: .2rem solid black;
+  border-radius: .2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: white;
+}

@@ -74,6 +74,7 @@ module.exports = {
     host: '0.0.0.0',
     disableHostCheck: true,
     port: 3000,
+    https: true,
   },
   performance: {
     hints: false,

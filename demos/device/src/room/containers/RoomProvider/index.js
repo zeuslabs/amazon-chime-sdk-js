@@ -1,8 +1,9 @@
 import React, { useEffect, useReducer, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import MeetingManager from '../MeetingManager';
-import routes from '../routes';
+import MeetingManager from '../../../MeetingManager';
+import { reducer, initialState } from './reducer';
+import routes from '../../../routes';
 
 const sendMessage = async msg => {
   if (!window.deviceEnvironment) return;
@@ -10,33 +11,6 @@ const sendMessage = async msg => {
 
   const env = await window.deviceEnvironment;
   env.sendMessage(msg);
-};
-
-const initialState = {
-  activeMeeting: false,
-  isSharingLocalVideo: false,
-};
-
-const reducer = (state, { type, payload }) => {
-  switch (type) {
-    case 'JOIN_MEETING':
-      return {
-        ...state,
-        activeMeeting: true,
-      };
-    case 'END_MEETING':
-      return {
-        ...state,
-        activeMeeting: null,
-      };
-    case 'START_LOCAL_VIDEO':
-      return {
-        ...state,
-        isSharingLocalVideo: true,
-      };
-    default:
-      return state;
-  }
 };
 
 const RoomProvider = ({ history }) => {
@@ -60,19 +34,32 @@ const RoomProvider = ({ history }) => {
         }
 
         break;
-      case 'END_MEETING':
+
+      case 'START_LOCAL_VIDEO':
+        MeetingManager.startLocalVideo();
+        dispatch({ type: 'START_LOCAL_VIDEO' });
+        break;
+
+      case 'LEAVE_MEETING':
         try {
-          await MeetingManager.endMeeting();
+          await MeetingManager.leaveMeeting();
           history.push(routes.ROOT);
-          dispatch('END_MEETING');
+          dispatch({ type: 'LEAVE_MEETING' });
         } catch (e) {
           alert(e);
         }
         break;
-      case 'START_LOCAL_VIDEO':
-        MeetingManager.startLocalVideo();
-        dispatch('START_LOCAL_VIDEO');
+
+      case 'END_MEETING':
+        try {
+          await MeetingManager.endMeeting();
+          history.push(routes.ROOT);
+          dispatch({ type: 'END_MEETING' });
+        } catch (e) {
+          alert(e);
+        }
         break;
+
       default:
         console.log(`Unhandled incoming message: ${type}`);
         break;
@@ -99,7 +86,6 @@ const RoomProvider = ({ history }) => {
     });
   }, [state.isSharingLocalVideo]);
 
-  // TODO - replace hard coded communication layer
   useEffect(() => {
     if (!window.deviceEnvironment) return;
 

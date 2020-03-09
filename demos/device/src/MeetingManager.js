@@ -12,6 +12,7 @@ const BASE_URL = [
   location.host,
   location.pathname.replace(/\/*$/, '/').replace('/device', ''),
 ].join('');
+
 class MeetingManager {
   constructor() {
     this.title = null;
@@ -40,6 +41,15 @@ class MeetingManager {
     this.audioVideo.addObserver(observer);
   }
 
+  removeObserver(observer) {
+    if (!this.audioVideo) {
+      console.error('AudioVideo not initialized. Cannot remove observer');
+      return;
+    }
+
+    this.audioVideo.removeObserver(observer);
+  }
+
   bindVideoTile(id, videoEl) {
     this.audioVideo.bindVideoElement(id, videoEl);
   }
@@ -50,20 +60,16 @@ class MeetingManager {
   }
 
   async joinMeeting(meetingId, name) {
-    try {
-      const url = `${BASE_URL}join?title=${encodeURIComponent(meetingId)}&name=${encodeURIComponent(
-        name
-      )}`;
-      const res = await fetch(url, { method: 'POST' });
-      const data = await res.json();
-      this.title = data.JoinInfo.Title;
-      await this.initializeMeetingSession(
-        new MeetingSessionConfiguration(data.JoinInfo.Meeting, data.JoinInfo.Attendee)
-      );
-      this.audioVideo.start();
-    } catch (err) {
-      console.log(err);
-    }
+    const url = `${BASE_URL}join?title=${encodeURIComponent(meetingId)}&name=${encodeURIComponent(
+      name
+    )}`;
+    const res = await fetch(url, { method: 'POST' });
+    const data = await res.json();
+    this.title = data.JoinInfo.Title;
+    await this.initializeMeetingSession(
+      new MeetingSessionConfiguration(data.JoinInfo.Meeting, data.JoinInfo.Attendee)
+    );
+    this.audioVideo.start();
   }
 
   async endMeeting() {
