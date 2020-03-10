@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect } from 'react';
 
 import BrowserEnvironment from './BrowserEnvironment';
 import DolbyEnvironment from './DolbyEnvironment';
-
 // import DapiLink from './DapiLink';
 
 // Todo - Route based communication layer for dolby/broadcast
 // const channel = new BroadcastChannel('chime-broadcaster');
 
-const RoomShim = () => {
+const RoomShim = (): JSX.Element => {
   useEffect(() => {
     if (window.deviceEnvironment) return;
 
@@ -33,7 +33,7 @@ const RoomShim = () => {
     }
   }, []);
 
-  return null;
+  return <></>;
 };
 
 export default RoomShim;

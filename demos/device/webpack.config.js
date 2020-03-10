@@ -19,7 +19,7 @@ module.exports = {
     }),
     new HtmlWebpackInlineSourcePlugin(),
   ],
-  entry: [`./src/index.js`],
+  entry: [`./src/index.tsx`],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: `${app}-bundle.js`,
@@ -33,16 +33,15 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(tsx|ts)?$/,
+        test: /\.(tsx|jsx|ts)?$/,
         exclude: /node_modules/,
         loader: 'awesome-typescript-loader',
       },
       {
-        test: /\.(jsx|js)$/,
+        enforce: 'pre',
+        test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
+        loader: 'source-map-loader',
       },
       {
         test: /\.css$/,

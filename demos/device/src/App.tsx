@@ -1,15 +1,15 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import RoomProvider from './room/containers/RoomProvider';
-import RoomShim from './shim/RoomShim';
-import Meeting from './room/views/Meeting';
-import Home from './room/views/Home';
 import Controller from './controller/views/Controller';
-import ControllerShim from './shim/ControllerShim';
+import RoomProvider from './room/containers/RoomProvider';
+import Home from './room/views/Home';
+import Meeting from './room/views/Meeting';
 import routes from './routes';
+import ControllerShim from './shim/ControllerShim';
+import RoomShim from './shim/RoomShim';
 
-const App = () => {
+const App = (): JSX.Element => {
   return (
     <Router>
       <Switch>

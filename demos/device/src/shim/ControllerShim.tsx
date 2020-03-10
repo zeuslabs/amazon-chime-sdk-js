@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import BrowserEnvironment from './BrowserEnvironment';
 import DolbyEnvironment from './DolbyEnvironment';
 
-const ControllerShim = () => {
+const ControllerShim = (): JSX.Element => {
   useEffect(() => {
     if (window.controllerEnvironment) return;
 
@@ -29,7 +29,7 @@ const ControllerShim = () => {
     }
   }, []);
 
-  return null;
+  return <></>;
 };
 
 export default ControllerShim;

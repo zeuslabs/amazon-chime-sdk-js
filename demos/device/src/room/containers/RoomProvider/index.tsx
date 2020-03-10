@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useReducer, useRef } from 'react';
-import { withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import MeetingManager from '../../../MeetingManager';
-import { reducer, initialState } from './reducer';
 import routes from '../../../routes';
+import { initialState, reducer } from './reducer';
 
-const sendMessage = async msg => {
+const sendMessage = async (msg: {
+  type: any;
+  payload?: { isSharingLocalVideo: any };
+}): Promise<void> => {
   if (!window.deviceEnvironment) return;
   console.log(`Sending message to controller ${msg.type}`);
 
@@ -13,17 +17,17 @@ const sendMessage = async msg => {
   env.sendMessage(msg);
 };
 
-const RoomProvider = ({ history }) => {
+const RoomProvider = ({ history }: RouteComponentProps): any => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const isInitialized = useRef(false);
 
-  const messageHandler = async ({ type, payload }) => {
+  const messageHandler = async ({ type, payload }): Promise<void> => {
     console.log(`RoomProvider::messageHandler - Message received with type: ${type}`);
 
     switch (type) {
       case 'JOIN_MEETING':
         const { meetingId, name } = payload;
-        if ((!meetingId, !name)) return;
+        if (!meetingId || !name) return;
 
         try {
           await MeetingManager.joinMeeting(meetingId, name);
@@ -89,7 +93,7 @@ const RoomProvider = ({ history }) => {
   useEffect(() => {
     if (!window.deviceEnvironment) return;
 
-    deviceEnvironment.then(env => {
+    window.deviceEnvironment.then(env => {
       env.init(messageHandler);
     });
 

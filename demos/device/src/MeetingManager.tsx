@@ -1,26 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  AudioVideoFacade,
   ConsoleLogger,
   DefaultDeviceController,
   DefaultMeetingSession,
+  Device,
   LogLevel,
   MeetingSessionConfiguration,
-} from '../../../src/index';
-
-const BASE_URL = [
-  location.protocol,
-  '//',
-  location.host,
-  location.pathname.replace(/\/*$/, '/').replace('/device', ''),
-].join('');
+} from '../../../build/index';
 
 class MeetingManager {
-  constructor() {
-    this.title = null;
-    this.meetingSession = null;
-    this.audioVideo = null;
-  }
+  private static BASE_URL = [
+    location.protocol,
+    '//',
+    location.host,
+    location.pathname.replace(/\/*$/, '/').replace('/device', ''),
+  ].join('');
 
-  async initializeMeetingSession(configuration) {
+  private title: string = '';
+  private meetingSession: DefaultMeetingSession | null = null;
+  private audioVideo: AudioVideoFacade | null = null;
+  private device: Device = null;
+
+  constructor() {}
+
+  async initializeMeetingSession(configuration: any): Promise<void> {
     const logger = new ConsoleLogger('DEV-SDK', LogLevel.DEBUG);
     const deviceController = new DefaultDeviceController(logger);
     configuration.enableWebAudio = false;
@@ -29,10 +33,10 @@ class MeetingManager {
     const outputDevices = await this.audioVideo.listAudioOutputDevices();
     const defaultDev = outputDevices[0] && outputDevices[0].deviceId;
     await this.audioVideo.chooseAudioOutputDevice(defaultDev);
-    await this.audioVideo.chooseAudioInputDevice({ audio: true });
+    await this.audioVideo.chooseAudioInputDevice(this.device);
   }
 
-  addObserver(observer) {
+  addObserver(observer: any): void {
     if (!this.audioVideo) {
       console.error('AudioVideo not initialized. Cannot add observer');
       return;
@@ -41,7 +45,7 @@ class MeetingManager {
     this.audioVideo.addObserver(observer);
   }
 
-  removeObserver(observer) {
+  removeObserver(observer: any): void {
     if (!this.audioVideo) {
       console.error('AudioVideo not initialized. Cannot remove observer');
       return;
@@ -50,19 +54,22 @@ class MeetingManager {
     this.audioVideo.removeObserver(observer);
   }
 
-  bindVideoTile(id, videoEl) {
+  bindVideoTile(id: number, videoEl: HTMLVideoElement): void {
     this.audioVideo.bindVideoElement(id, videoEl);
   }
 
-  async startLocalVideo() {
-    await this.audioVideo.chooseVideoInputDevice({ audio: true, video: true });
+  async startLocalVideo(): Promise<void> {
+    await this.audioVideo.chooseVideoInputDevice(this.device);
     this.audioVideo.startLocalVideoTile();
   }
 
-  async joinMeeting(meetingId, name) {
-    const url = `${BASE_URL}join?title=${encodeURIComponent(meetingId)}&name=${encodeURIComponent(
-      name
-    )}`;
+  async joinMeeting(
+    meetingId: string | number | boolean,
+    name: string | number | boolean
+  ): Promise<void> {
+    const url = `${MeetingManager.BASE_URL}join?title=${encodeURIComponent(
+      meetingId
+    )}&name=${encodeURIComponent(name)}`;
     const res = await fetch(url, { method: 'POST' });
     const data = await res.json();
     this.title = data.JoinInfo.Title;
@@ -72,22 +79,22 @@ class MeetingManager {
     this.audioVideo.start();
   }
 
-  async endMeeting() {
-    await fetch(`${BASE_URL}end?title=${encodeURIComponent(this.title)}`, {
+  async endMeeting(): Promise<void> {
+    await fetch(`${MeetingManager.BASE_URL}end?title=${encodeURIComponent(this.title)}`, {
       method: 'POST',
     });
     this.leaveMeeting();
   }
 
-  leaveMeeting() {
+  leaveMeeting(): void {
     this.audioVideo.stop();
   }
 
-  bindAudioElement = ref => {
+  bindAudioElement = (ref: HTMLAudioElement) => {
     this.audioVideo.bindAudioElement(ref);
   };
 
-  unbindAudioElement = () => {
+  unbindAudioElement = (): void => {
     this.audioVideo.unbindAudioElement();
   };
 }

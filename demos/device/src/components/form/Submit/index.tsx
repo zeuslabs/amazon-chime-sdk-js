@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Submit.css';
 
-const Submit = props => {
+const Submit = (props): JSX.Element => {
   const { children, ...rest } = props;
 
   return (

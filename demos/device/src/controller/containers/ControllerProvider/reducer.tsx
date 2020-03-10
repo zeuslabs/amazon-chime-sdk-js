@@ -3,8 +3,10 @@ export const initialState = {
   isSharingLocalVideo: false,
 };
 
-export function reducer(state, action) {
-  switch (action.type) {
+export const reducer = (state, action): any => {
+  const [type, payload] = action;
+
+  switch (type) {
     case 'MEETING_JOINED':
       return {
         ...state,
@@ -14,7 +16,7 @@ export function reducer(state, action) {
     case 'MEETING_DATA':
       return {
         ...state,
-        ...action.payload,
+        payload,
       };
 
     case 'MEETING_LEFT':
@@ -26,6 +28,4 @@ export function reducer(state, action) {
     default:
       return { ...state };
   }
-}
-
-export default reducer;
+};

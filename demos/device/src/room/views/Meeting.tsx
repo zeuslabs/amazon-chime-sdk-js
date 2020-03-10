@@ -1,9 +1,9 @@
 import React from 'react';
 
-import VideoManager from '../containers/VideoManager';
 import AudioManager from '../containers/AudioManager';
+import VideoManager from '../containers/VideoManager';
 
-const Meeting = () => {
+const Meeting = (): JSX.Element => {
   return (
     <>
       <h1>In-Meeting</h1>

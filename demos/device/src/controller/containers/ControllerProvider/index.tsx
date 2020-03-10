@@ -1,8 +1,9 @@
-import React, { useEffect, useReducer, useContext, createContext, useCallback } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { createContext, useCallback, useContext, useEffect, useReducer } from 'react';
 
-import { reducer, initialState } from './reducer';
+import { initialState, reducer } from './reducer';
 
-async function sendMessage(msg) {
+async function sendMessage(msg: { type: any }): Promise<void> {
   if (!window.controllerEnvironment) return;
   console.log(`Sending message to hub ${msg.type}`);
 
@@ -10,10 +11,10 @@ async function sendMessage(msg) {
   env.sendMessage(msg);
 }
 
-const ControllerStateContext = createContext();
-const ControllerDispatchContext = createContext();
+const ControllerStateContext = createContext(null);
+const ControllerDispatchContext = createContext(null);
 
-export const ControllerProvider = ({ children }) => {
+export const ControllerProvider = ({ children }): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const wrappedDispatch = useCallback(
     msg => {
@@ -23,18 +24,18 @@ export const ControllerProvider = ({ children }) => {
     [dispatch]
   );
 
-  useEffect(() => {
-    if (!window.controllerEnvironment) return;
-
-    controllerEnvironment.then(env => {
-      env.init(messageHandler);
-    });
-  }, []);
-
-  const messageHandler = msg => {
+  const messageHandler = (msg: any): void => {
     console.log(`Received message from Hub: ${msg.type}`);
     dispatch(msg);
   };
+
+  useEffect(() => {
+    if (!window.controllerEnvironment) return;
+
+    window.controllerEnvironment.then((env: any): void => {
+      env.init(messageHandler);
+    });
+  }, []);
 
   return (
     <ControllerStateContext.Provider value={state}>
@@ -45,7 +46,7 @@ export const ControllerProvider = ({ children }) => {
   );
 };
 
-export function useControllerState() {
+export function useControllerState(): any {
   const context = useContext(ControllerStateContext);
   if (context === undefined) {
     throw new Error('useControllerState must be used within a Provider');
@@ -53,7 +54,7 @@ export function useControllerState() {
   return context;
 }
 
-export function useControllerDispatch() {
+export function useControllerDispatch(): any {
   const context = useContext(ControllerDispatchContext);
   if (context === undefined) {
     throw new Error('useControllerDispatch must be used within a Provider');

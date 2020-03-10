@@ -1,15 +1,16 @@
-export class DolbyEnvironment {
-  dapi;
-  application;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+class DolbyEnvironment {
+  private dapi: any;
+  private application: any;
 
-  constructor(dapi) {
+  constructor(dapi: any) {
     this.dapi = dapi;
   }
 
-  init = messageHandler => {
+  init = (messageHandler: any): void => {
     console.info('Controller environment init called.');
 
-    const onInit = ok => {
+    const onInit = (ok: any): void => {
       console.debug('DAPI.onInit.');
 
       if (!ok) {
@@ -34,7 +35,7 @@ export class DolbyEnvironment {
         }
       };
 
-      session.onMessageReceived = message => {
+      session.onMessageReceived = (message: string): void => {
         console.debug('DAPI: debug: onMessageReceived');
         messageHandler(JSON.parse(message));
       };
@@ -45,7 +46,7 @@ export class DolbyEnvironment {
     this.dapi.init(onInit);
   };
 
-  sendMessage = message => {
+  sendMessage = (message: any): void => {
     this.dapi.appLink2.sendMessage(JSON.stringify(message));
   };
 }

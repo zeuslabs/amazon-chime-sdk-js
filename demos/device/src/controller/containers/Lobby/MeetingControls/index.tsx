@@ -1,27 +1,27 @@
-import React from 'react';
-
-import { useControllerState, useControllerDispatch } from '../../ControllerProvider';
-import Button from '../../../../components/Button';
-
 import './MeetingControls.css';
 
-const MeetingControls = () => {
+import React from 'react';
+
+import Button from '../../../../components/Button';
+import { useControllerDispatch, useControllerState } from '../../ControllerProvider';
+
+const MeetingControls: React.FC = (): JSX.Element => {
   const state = useControllerState();
   const dispatch = useControllerDispatch();
 
-  const toggleVideoTile = () => {
+  const toggleVideoTile = (): void => {
     dispatch({
       type: 'START_LOCAL_VIDEO',
     });
   };
 
-  const leaveMeeting = () => {
+  const leaveMeeting = (): void => {
     dispatch({
       type: 'LEAVE_MEETING',
     });
   };
 
-  const endMeeting = () => {
+  const endMeeting = (): void => {
     dispatch({
       type: 'END_MEETING',
     });
@@ -32,8 +32,8 @@ const MeetingControls = () => {
       <Button active={state.isSharingLocalVideo} onClick={toggleVideoTile}>
         {state.isSharingLocalVideo ? 'Disable video' : 'Enable video'}
       </Button>
-      <Button onClick={leaveMeeting}>Leave meeting</Button>
-      <Button onClick={endMeeting}>End meeting</Button>
+      <button onClick={leaveMeeting}>Leave meeting</button>
+      <button onClick={endMeeting}>End meeting</button>
     </div>
   );
 };
