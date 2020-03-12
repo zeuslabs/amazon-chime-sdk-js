@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
 import { useControllerDispatch } from '../../ControllerProvider';
-import Input from '../../../../components/form/Input';
 import Submit from '../../../../components/form/Submit';
 import KeyboardInput from '../../../../components/form/KeyboardInput';
+import { Type as actionType } from '../../../../room/containers/RoomProvider/reducer';
 
 import './MeetingForm.css';
 
@@ -16,7 +16,7 @@ const MeetingForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch({
-      type: 'JOIN_MEETING',
+      type: actionType.JoinMeeting,
       payload: {
         name,
         meetingId,

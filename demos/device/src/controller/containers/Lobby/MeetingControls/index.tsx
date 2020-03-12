@@ -4,6 +4,7 @@ import React from 'react';
 
 import Button from '../../../../components/Button';
 import { useControllerDispatch, useControllerState } from '../../ControllerProvider';
+import { Type as actionType } from '../../../../room/containers/RoomProvider/reducer';
 
 const MeetingControls: React.FC = () => {
   const state = useControllerState();
@@ -11,19 +12,19 @@ const MeetingControls: React.FC = () => {
 
   const toggleVideoTile = (): void => {
     dispatch({
-      type: state.isSharingLocalVideo ? 'STOP_LOCAL_VIDEO' : 'START_LOCAL_VIDEO',
+      type: state.isSharingLocalVideo ? actionType.StopLocalVideo : actionType.StartLocalVideo,
     });
   };
 
   const leaveMeeting = (): void => {
     dispatch({
-      type: 'LEAVE_MEETING',
+      type: actionType.LeaveMeeting,
     });
   };
 
   const endMeeting = (): void => {
     dispatch({
-      type: 'END_MEETING',
+      type: actionType.EndMeeting,
     });
   };
 

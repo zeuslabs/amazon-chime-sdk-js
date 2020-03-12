@@ -3,26 +3,37 @@ export interface State {
   isSharingLocalVideo: boolean;
 }
 
+export enum Type {
+  MeetingJoined = 'MEETING_JOINED',
+  MeetingData = 'MEETING_DATA',
+  MeetingLeft = 'METTING_LEFT',
+}
+
+export interface Action {
+  type: Type;
+  payload: any;
+}
+
 export const initialState: State = {
   activeMeeting: false,
   isSharingLocalVideo: false,
 };
 
-export const reducer = (state: State, action: any): State => {
+export const reducer = (state: State, action: Action): State => {
   const { type, payload } = action;
 
   switch (type) {
-    case 'MEETING_JOINED':
+    case Type.MeetingJoined:
       return {
         ...state,
         activeMeeting: true,
       };
-    case 'MEETING_DATA':
+    case Type.MeetingData:
       return {
         ...state,
         ...payload,
       };
-    case 'MEETING_LEFT':
+    case Type.MeetingLeft:
       return {
         ...state,
         activeMeeting: false,

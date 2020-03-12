@@ -3,35 +3,48 @@ export interface State {
   isSharingLocalVideo: boolean;
 }
 
+export enum Type {
+  JoinMeeting = 'JOIN_MEETING',
+  StartLocalVideo = 'START_LOCAL_VIDEO',
+  StopLocalVideo = 'STOP_LOCAL_VIDEO',
+  EndMeeting = 'END_MEETING',
+  LeaveMeeting = 'LEAVE_MEETING',
+}
+
+export interface Action {
+  type: Type;
+  payload?: any;
+}
+
 export const initialState: State = {
   activeMeeting: false,
   isSharingLocalVideo: false,
 };
 
-export function reducer(state: State, action: any): State {
-  const { type, _payload } = action;
+export function reducer(state: State, action: Action): State {
+  const { type, payload } = action;
   switch (type) {
-    case 'JOIN_MEETING':
+    case Type.JoinMeeting:
       return {
         ...state,
         activeMeeting: true,
       };
-    case 'START_LOCAL_VIDEO':
+    case Type.StartLocalVideo:
       return {
         ...state,
         isSharingLocalVideo: true,
       };
-    case 'STOP_LOCAL_VIDEO':
+    case Type.StopLocalVideo:
       return {
         ...state,
         isSharingLocalVideo: false,
       };
-    case 'END_MEETING':
+    case Type.EndMeeting:
       return {
         ...state,
         activeMeeting: false,
       };
-    case 'LEAVE_MEETING':
+    case Type.LeaveMeeting:
       return {
         ...state,
         activeMeeting: false,

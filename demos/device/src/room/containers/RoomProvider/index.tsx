@@ -3,8 +3,9 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import MeetingManager from '../../MeetingManager';
 import routes from '../../../routes';
-import { initialState, reducer } from './reducer';
+import { initialState, reducer, Type as actionType } from './reducer';
 import { MessageHandler, DeviceMessage } from '../../../shim/types';
+import { Type as messageType } from '../../../controller/containers/ControllerProvider/reducer';
 
 const sendMessage = async (msg: DeviceMessage): Promise<void> => {
   if (!window.deviceEnvironment) return;
@@ -25,31 +26,31 @@ const RoomProvider: React.FC<RoomProviderProps> = ({ history }) => {
 
     try {
       switch (type) {
-        case 'JOIN_MEETING':
+        case actionType.JoinMeeting:
           const { meetingId, name } = payload;
           if (!meetingId || !name) return;
 
           await MeetingManager.joinMeeting(meetingId, name);
-          dispatch({ type: 'JOIN_MEETING' });
+          dispatch({ type: actionType.JoinMeeting });
           history.push(routes.MEETING);
           break;
-        case 'START_LOCAL_VIDEO':
+        case actionType.StartLocalVideo:
           MeetingManager.startLocalVideo();
-          dispatch({ type: 'START_LOCAL_VIDEO' });
+          dispatch({ type: actionType.StartLocalVideo });
           break;
-        case 'STOP_LOCAL_VIDEO':
+        case actionType.StopLocalVideo:
           MeetingManager.stopLocalVideo();
-          dispatch({ type: 'STOP_LOCAL_VIDEO' });
+          dispatch({ type: actionType.StopLocalVideo });
           break;
-        case 'LEAVE_MEETING':
+        case actionType.LeaveMeeting:
           await MeetingManager.leaveMeeting();
           history.push(routes.ROOT);
-          dispatch({ type: 'LEAVE_MEETING' });
+          dispatch({ type: actionType.LeaveMeeting });
           break;
-        case 'END_MEETING':
+        case actionType.EndMeeting:
           await MeetingManager.endMeeting();
           history.push(routes.ROOT);
-          dispatch({ type: 'END_MEETING' });
+          dispatch({ type: actionType.EndMeeting });
           break;
         default:
           console.log(`Unhandled incoming message: ${type}`);
@@ -64,9 +65,9 @@ const RoomProvider: React.FC<RoomProviderProps> = ({ history }) => {
     if (!isInitialized.current) return;
 
     if (state.activeMeeting) {
-      sendMessage({ type: 'MEETING_JOINED' });
+      sendMessage({ type: messageType.MeetingJoined });
     } else {
-      sendMessage({ type: 'MEETING_LEFT' });
+      sendMessage({ type: messageType.MeetingLeft });
     }
   }, [state.activeMeeting]);
 
@@ -75,7 +76,7 @@ const RoomProvider: React.FC<RoomProviderProps> = ({ history }) => {
 
     const { isSharingLocalVideo } = state;
     sendMessage({
-      type: 'MEETING_DATA',
+      type: messageType.MeetingData,
       payload: { isSharingLocalVideo: isSharingLocalVideo },
     });
   }, [state.isSharingLocalVideo]);
