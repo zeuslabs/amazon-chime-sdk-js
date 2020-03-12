@@ -6,7 +6,7 @@
     "deps": "cd ../.. && npm install && npm run build",
     "build:fast": "tsc && webpack --config ./webpack.config.js",
     "build": "npm run deps && npm install && npm run build:fast",
-    "start:fast": "npm run build:fast && node server.js",
+    "start:fast": "npm run build:fast --is_local=true && node server.js",
     "start": "npm run deps && npm install && npm install aws-sdk && npm run start:fast"
   },
   "devDependencies": {
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "amazon-chime-sdk-js": "file:../..",
-    "aws-sdk": "^2.636.0",
+    "aws-sdk": "^2.638.0",
     "bootstrap": "^4.3.1",
     "compression": "^1.7.4",
     "jquery": "^3.4.1",

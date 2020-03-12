@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add injectable session URL rewrite function to support proxies
 - Add POSTLogger for meeting sessions
 - Integrate MeetingSessionPOSTLogger to demo app
+- Inject an environment variable to check if the demo app is running on localhost
 
 ### Changed
 - Add observer event for content sharing

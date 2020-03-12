@@ -19,8 +19,10 @@ import {
   Device,
   DeviceChangeObserver,
   LogLevel,
+  Logger,
   MeetingSession,
   MeetingSessionConfiguration,
+  MeetingSessionPOSTLogger,
   MeetingSessionStatus,
   MeetingSessionStatusCode,
   MeetingSessionVideoAvailability,
@@ -28,6 +30,8 @@ import {
   Versioning,
   VideoTileState,
 } from '../../../../src/index';
+
+const isLocal = process.env.IS_LOCAL === 'true';
 
 class DemoTileOrganizer {
   private static MAX_TILES = 17;
@@ -506,7 +510,12 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver,
   }
 
   async initializeMeetingSession(configuration: MeetingSessionConfiguration): Promise<void> {
-    const logger = new ConsoleLogger('SDK', LogLevel.DEBUG);
+    let logger: Logger;
+    if (isLocal) {
+      logger = new ConsoleLogger('SDK', LogLevel.DEBUG);
+    } else {
+      logger = new MeetingSessionPOSTLogger('SDK', configuration, 85, 1150, `${DemoMeetingApp.BASE_URL}logs`, LogLevel.INFO);
+    }
     const deviceController = new DefaultDeviceController(logger);
     configuration.enableWebAudio = this.enableWebAudio;
     this.meetingSession = new DefaultMeetingSession(configuration, logger, deviceController);
