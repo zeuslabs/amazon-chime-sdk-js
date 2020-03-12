@@ -1,10 +1,15 @@
-export const initialState = {
+export interface State {
+  activeMeeting: boolean;
+  isSharingLocalVideo: boolean;
+}
+
+export const initialState: State = {
   activeMeeting: false,
   isSharingLocalVideo: false,
 };
 
-export const reducer = (state, action): any => {
-  const [type, payload] = action;
+export const reducer = (state: State, action: any): State => {
+  const { type, payload } = action;
 
   switch (type) {
     case 'MEETING_JOINED':
@@ -12,19 +17,16 @@ export const reducer = (state, action): any => {
         ...state,
         activeMeeting: true,
       };
-
     case 'MEETING_DATA':
       return {
         ...state,
-        payload,
+        ...payload,
       };
-
     case 'MEETING_LEFT':
       return {
         ...state,
         activeMeeting: false,
       };
-
     default:
       return { ...state };
   }

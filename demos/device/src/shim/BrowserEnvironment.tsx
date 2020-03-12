@@ -1,16 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-class BrowserEnvironment {
+import { DeviceEnvironment, DeviceMessage, MessageHandler } from './types';
+
+class BrowserEnvironment implements DeviceEnvironment {
   channel = new BroadcastChannel('chime-broadcaster');
 
-  init(messageHandler): any {
+  init(listener: MessageHandler): any {
     console.info('Controller environment init called.');
 
     this.channel.onmessage = ({ data }) => {
-      messageHandler(data);
+      listener(data);
     };
   }
 
-  sendMessage(message): any {
+  sendMessage(message: DeviceMessage): void {
     this.channel.postMessage(message);
   }
 }

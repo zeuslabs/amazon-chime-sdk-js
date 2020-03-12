@@ -9,7 +9,7 @@ import routes from './routes';
 import ControllerShim from './shim/ControllerShim';
 import RoomShim from './shim/RoomShim';
 
-const App = (): JSX.Element => {
+const App: React.FC = () => {
   return (
     <Router>
       <Switch>

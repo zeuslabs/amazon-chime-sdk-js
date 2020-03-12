@@ -20,4 +20,4 @@ To run the `device` application demo locally:
 
 5. In another terminal in the same directory, start the node server: `npm run start:backend`
 
-6. Open two tabs or two browser windows, navigate to http://localhost:3000/controller and http://localhost:3000/controller
+6. Open two tabs or two browser windows, navigate to https://localhost:3000/ and https://localhost:3000/controller

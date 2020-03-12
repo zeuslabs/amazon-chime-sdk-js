@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useCallback, useContext, useEffect, useReducer } from 'react';
 
-import { initialState, reducer } from './reducer';
+import { initialState, reducer, State } from './reducer';
 
 async function sendMessage(msg: { type: any }): Promise<void> {
   if (!window.controllerEnvironment) return;
@@ -14,15 +13,12 @@ async function sendMessage(msg: { type: any }): Promise<void> {
 const ControllerStateContext = createContext(null);
 const ControllerDispatchContext = createContext(null);
 
-export const ControllerProvider = ({ children }): JSX.Element => {
+export const ControllerProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const wrappedDispatch = useCallback(
-    msg => {
-      sendMessage(msg);
-      dispatch(msg);
-    },
-    [dispatch]
-  );
+  const wrappedDispatch = useCallback(msg => {
+    sendMessage(msg);
+    dispatch(msg);
+  }, []);
 
   const messageHandler = (msg: any): void => {
     console.log(`Received message from Hub: ${msg.type}`);

@@ -1,15 +1,21 @@
 import React, { useEffect, useRef } from 'react';
 
-const VideoTile = ({ bindVideoTile, nameplate, isLocal }) => {
-  const videoRef = useRef(null);
+interface VideoTileProps {
+  isLocal: boolean;
+  nameplate: string;
+  bindVideoTile: (videoRef: any) => void;
+}
+
+const VideoTile: React.FC<VideoTileProps> = ({ bindVideoTile, nameplate, isLocal }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (!videoRef) {
+    if (!videoRef.current) {
       return;
     }
 
     bindVideoTile(videoRef.current);
-  }, [bindVideoTile, videoRef]);
+  }, [videoRef, bindVideoTile]);
 
   const classes = `VideoTile ${isLocal ? 'VideoTile--local' : ''}`;
   return <video className={classes} ref={videoRef} />;

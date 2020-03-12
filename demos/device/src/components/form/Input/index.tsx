@@ -2,15 +2,22 @@ import React from 'react';
 
 import './Input.css';
 
-const Input = props => {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  name: string;
+  label: string;
+}
+
+const Input: React.FC<InputProps> = props => {
   const { name, label, ...rest } = props;
+
+  console.log(rest);
 
   return (
     <div className="input-group">
       <label htmlFor={name} className="label">
         {label}
       </label>
-      <input className="input" name={name} {...rest} />
+      <input {...rest} className="input" name={name} />
     </div>
   );
 };

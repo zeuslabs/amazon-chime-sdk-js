@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 
-import MeetingManager from '../../MeetingManager';
+import MeetingManager from '../MeetingManager';
 import VideoGrid from '../components/VideoGrid';
 import VideoTile from '../components/VideoTile';
 
@@ -8,7 +8,6 @@ function reducer(state, { type, payload }) {
   switch (type) {
     case 'TILE_UPDATED': {
       const { tileId, ...rest } = payload;
-
       return {
         ...state,
         [tileId]: {
@@ -23,7 +22,6 @@ function reducer(state, { type, payload }) {
       };
     }
     default: {
-      console.error(`Unhandled type received: ${type}`);
       return { ...state };
     }
   }
@@ -36,7 +34,7 @@ const VideoManager = () => {
     dispatch({ type: 'TILE_UPDATED', payload: tileState });
   };
 
-  const videoTileWasRemoved = tileId => {
+  const videoTileWasRemoved = (tileId: number) => {
     dispatch({ type: 'TILE_DELETED', payload: tileId });
   };
 

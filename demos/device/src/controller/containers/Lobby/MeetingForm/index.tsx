@@ -6,13 +6,13 @@ import Submit from '../../../../components/form/Submit';
 
 import './MeetingForm.css';
 
-const MeetingForm = () => {
+const MeetingForm: React.FC = () => {
   const dispatch = useControllerDispatch();
-  const [name, setName] = useState('');
+  const [name, setName] = useState('ControllerUser');
   const [meetingId, setMeetingId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     if (name === 'meetingId') {
@@ -22,9 +22,8 @@ const MeetingForm = () => {
     }
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     dispatch({
       type: 'JOIN_MEETING',
       payload: {
@@ -32,7 +31,6 @@ const MeetingForm = () => {
         meetingId,
       },
     });
-
     setIsLoading(true);
   };
 

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import BrowserEnvironment from './BrowserEnvironment';
 import DolbyEnvironment from './DolbyEnvironment';
 
-const ControllerShim = (): JSX.Element => {
+const ControllerShim: React.FC = () => {
   useEffect(() => {
     if (window.controllerEnvironment) return;
 
@@ -11,14 +11,13 @@ const ControllerShim = (): JSX.Element => {
 
     const urlParams = new URLSearchParams(window.location.search);
     const shim = urlParams.get('shim');
-
     if (shim === 'dolby') {
       console.log('Dolby param found. Setting up DolbyEnvironment');
 
       const dapi = window.dapi;
-
-      if (!dapi) {
-        console.error('No dapi detected, aborting');
+      if (dapi) {
+        console.error('Dapi not initialized, aborting');
+        return;
       }
 
       window.controllerEnvironment = Promise.resolve(new DolbyEnvironment(dapi));
@@ -29,7 +28,7 @@ const ControllerShim = (): JSX.Element => {
     }
   }, []);
 
-  return <></>;
+  return null;
 };
 
 export default ControllerShim;

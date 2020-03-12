@@ -5,7 +5,7 @@ import React from 'react';
 import Button from '../../../../components/Button';
 import { useControllerDispatch, useControllerState } from '../../ControllerProvider';
 
-const MeetingControls: React.FC = (): JSX.Element => {
+const MeetingControls: React.FC = () => {
   const state = useControllerState();
   const dispatch = useControllerDispatch();
 
@@ -32,8 +32,8 @@ const MeetingControls: React.FC = (): JSX.Element => {
       <Button active={state.isSharingLocalVideo} onClick={toggleVideoTile}>
         {state.isSharingLocalVideo ? 'Disable video' : 'Enable video'}
       </Button>
-      <button onClick={leaveMeeting}>Leave meeting</button>
-      <button onClick={endMeeting}>End meeting</button>
+      <Button onClick={leaveMeeting}>Leave meeting</Button>
+      <Button onClick={endMeeting}>End meeting</Button>
     </div>
   );
 };

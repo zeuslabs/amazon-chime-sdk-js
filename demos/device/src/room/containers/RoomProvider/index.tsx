@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useReducer, useRef } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import MeetingManager from '../../../MeetingManager';
+import MeetingManager from '../../MeetingManager';
 import routes from '../../../routes';
 import { initialState, reducer } from './reducer';
+import { MessageHandler, DeviceMessage } from '../../../shim/types';
 
-const sendMessage = async (msg: {
-  type: any;
-  payload?: { isSharingLocalVideo: any };
-}): Promise<void> => {
+const sendMessage = async (msg: DeviceMessage): Promise<void> => {
   if (!window.deviceEnvironment) return;
   console.log(`Sending message to controller ${msg.type}`);
 
@@ -17,56 +14,45 @@ const sendMessage = async (msg: {
   env.sendMessage(msg);
 };
 
-const RoomProvider = ({ history }: RouteComponentProps): any => {
+interface RoomProviderProps extends RouteComponentProps {}
+
+const RoomProvider: React.FC<RoomProviderProps> = ({ history }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const isInitialized = useRef(false);
 
-  const messageHandler = async ({ type, payload }): Promise<void> => {
+  const messageHandler: MessageHandler = async ({ type, payload }) => {
     console.log(`RoomProvider::messageHandler - Message received with type: ${type}`);
 
-    switch (type) {
-      case 'JOIN_MEETING':
-        const { meetingId, name } = payload;
-        if (!meetingId || !name) return;
+    try {
+      switch (type) {
+        case 'JOIN_MEETING':
+          const { meetingId, name } = payload;
+          if (!meetingId || !name) return;
 
-        try {
           await MeetingManager.joinMeeting(meetingId, name);
           dispatch({ type: 'JOIN_MEETING' });
           history.push(routes.MEETING);
-        } catch (e) {
-          alert(e);
-        }
-
-        break;
-
-      case 'START_LOCAL_VIDEO':
-        MeetingManager.startLocalVideo();
-        dispatch({ type: 'START_LOCAL_VIDEO' });
-        break;
-
-      case 'LEAVE_MEETING':
-        try {
+          break;
+        case 'START_LOCAL_VIDEO':
+          MeetingManager.startLocalVideo();
+          dispatch({ type: 'START_LOCAL_VIDEO' });
+          break;
+        case 'LEAVE_MEETING':
           await MeetingManager.leaveMeeting();
           history.push(routes.ROOT);
           dispatch({ type: 'LEAVE_MEETING' });
-        } catch (e) {
-          alert(e);
-        }
-        break;
-
-      case 'END_MEETING':
-        try {
+          break;
+        case 'END_MEETING':
           await MeetingManager.endMeeting();
           history.push(routes.ROOT);
           dispatch({ type: 'END_MEETING' });
-        } catch (e) {
-          alert(e);
-        }
-        break;
-
-      default:
-        console.log(`Unhandled incoming message: ${type}`);
-        break;
+          break;
+        default:
+          console.log(`Unhandled incoming message: ${type}`);
+          break;
+      }
+    } catch (e) {
+      alert(e);
     }
   };
 

@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-class DolbyEnvironment {
+import { DeviceEnvironment, MessageHandler } from './types';
+
+class DolbyEnvironment implements DeviceEnvironment {
   private dapi: any;
-  private application: any;
 
   constructor(dapi: any) {
     this.dapi = dapi;
   }
 
-  init = (messageHandler: any): void => {
+  init = (messageHandler: MessageHandler): void => {
     console.info('Controller environment init called.');
 
-    const onInit = (ok: any): void => {
+    const onInit = (ok: boolean): void => {
       console.debug('DAPI.onInit.');
 
       if (!ok) {

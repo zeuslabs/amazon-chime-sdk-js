@@ -6,7 +6,8 @@
     "amazon-chime-sdk-js": "file:../..",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-router-dom": "^5.1.2"
+    "react-router-dom": "^5.1.2",
+    "react-touch-screen-keyboard": "^1.0.0"
   },
   "scripts": {
     "deps": "cd ../.. && npm install && npm run build",
