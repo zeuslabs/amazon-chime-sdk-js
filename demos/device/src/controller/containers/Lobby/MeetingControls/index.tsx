@@ -11,7 +11,7 @@ const MeetingControls: React.FC = () => {
 
   const toggleVideoTile = (): void => {
     dispatch({
-      type: 'START_LOCAL_VIDEO',
+      type: state.isSharingLocalVideo ? 'STOP_LOCAL_VIDEO' : 'START_LOCAL_VIDEO',
     });
   };
 

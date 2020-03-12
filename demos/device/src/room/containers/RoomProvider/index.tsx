@@ -37,6 +37,10 @@ const RoomProvider: React.FC<RoomProviderProps> = ({ history }) => {
           MeetingManager.startLocalVideo();
           dispatch({ type: 'START_LOCAL_VIDEO' });
           break;
+        case 'STOP_LOCAL_VIDEO':
+          MeetingManager.stopLocalVideo();
+          dispatch({ type: 'STOP_LOCAL_VIDEO' });
+          break;
         case 'LEAVE_MEETING':
           await MeetingManager.leaveMeeting();
           history.push(routes.ROOT);

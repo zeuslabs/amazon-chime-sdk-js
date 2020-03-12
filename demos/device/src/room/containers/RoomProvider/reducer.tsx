@@ -21,6 +21,11 @@ export function reducer(state: State, action: any): State {
         ...state,
         isSharingLocalVideo: true,
       };
+    case 'STOP_LOCAL_VIDEO':
+      return {
+        ...state,
+        isSharingLocalVideo: false,
+      };
     case 'END_MEETING':
       return {
         ...state,

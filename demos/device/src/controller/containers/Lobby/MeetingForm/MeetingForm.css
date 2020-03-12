@@ -1,5 +1,6 @@
 .MeetingForm {
   display: inline-block;
+  margin: 3rem auto 0;
 }
 
 .MeetingForm .Submit {

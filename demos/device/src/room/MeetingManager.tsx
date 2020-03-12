@@ -70,6 +70,10 @@ class MeetingManager {
     this.audioVideo.startLocalVideoTile();
   }
 
+  stopLocalVideo(): void {
+    this.audioVideo.stopLocalVideoTile();
+  }
+
   async joinMeeting(meetingId: string, name: string): Promise<any> {
     const url = `${BASE_URL}join?title=${encodeURIComponent(meetingId)}&name=${encodeURIComponent(
       name
@@ -103,10 +107,4 @@ class MeetingManager {
   }
 }
 
-const Manager = new MeetingManager();
-
-window.manager = Manager;
-
-export default Manager;
-
-// export default new MeetingManager();
+export default new MeetingManager();

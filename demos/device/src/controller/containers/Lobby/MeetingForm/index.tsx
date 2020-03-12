@@ -3,24 +3,15 @@ import React, { useState } from 'react';
 import { useControllerDispatch } from '../../ControllerProvider';
 import Input from '../../../../components/form/Input';
 import Submit from '../../../../components/form/Submit';
+import KeyboardInput from '../../../../components/form/KeyboardInput';
 
 import './MeetingForm.css';
 
 const MeetingForm: React.FC = () => {
   const dispatch = useControllerDispatch();
-  const [name, setName] = useState('ControllerUser');
+  const [name, setName] = useState('');
   const [meetingId, setMeetingId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    if (name === 'meetingId') {
-      setMeetingId(value);
-    } else {
-      setName(value);
-    }
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +27,13 @@ const MeetingForm: React.FC = () => {
 
   return (
     <form className="MeetingForm" onSubmit={handleSubmit}>
-      <Input name="name" label="Username" onChange={handleChange} value={name} />
-      <Input name="meetingId" label="Meeting ID" onChange={handleChange} value={meetingId} />
+      <KeyboardInput label="Username" active={!!name} value={name} onChange={setName} />
+      <KeyboardInput
+        label="Meeting ID"
+        active={!!meetingId}
+        value={meetingId}
+        onChange={setMeetingId}
+      />
       <Submit>{isLoading ? 'loading...' : 'Submit'}</Submit>
     </form>
   );
