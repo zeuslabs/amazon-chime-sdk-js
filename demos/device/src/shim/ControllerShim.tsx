@@ -15,7 +15,7 @@ const ControllerShim: React.FC = () => {
       console.log('Dolby param found. Setting up DolbyEnvironment');
 
       const dapi = window.dapi;
-      if (dapi) {
+      if (!dapi) {
         console.error('Dapi not initialized, aborting');
         return;
       }

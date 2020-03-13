@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AudioManager from '../containers/AudioManager';
+import MeetingAudio from '../containers/MeetingAudio';
 import VideoManager from '../containers/VideoManager';
 
 const Meeting = (): JSX.Element => {
@@ -8,7 +8,7 @@ const Meeting = (): JSX.Element => {
     <>
       <h1>In-Meeting</h1>
       <VideoManager />
-      <AudioManager />
+      <MeetingAudio />
     </>
   );
 };

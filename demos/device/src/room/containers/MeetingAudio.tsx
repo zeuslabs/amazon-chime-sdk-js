@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 import MeetingManager from '../MeetingManager';
 
-const AudioManager: React.FC = () => {
+const MeetingAudio: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -18,4 +18,4 @@ const AudioManager: React.FC = () => {
   return <audio ref={audioRef} style={{ display: 'none' }}></audio>;
 };
 
-export default AudioManager;
+export default MeetingAudio;
