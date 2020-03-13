@@ -1,15 +1,15 @@
 {
   "`": 1,
-  "name": "screen_sharing_test.config.json %ts",
+  "name": "content_share_screen_capture_test.config.json %ts",
   "grids": [
   ],
   "tests": [
     {
-      "name": "Screen Sharing Test %ts",
-      "description": "Screen Sharing Test",
+      "name": "Content Share Screen Capture %ts",
+      "description": "Screen sharing using content share",
       "tupleSize": 1,
       "noOfThreads": 1,
-      "testImpl": "ScreenSharingTest.js",
+      "testImpl": "ContentShareScreenCapture.js",
       "payload": {
         "url": "http://localhost:8080/",
         "retry": 1
